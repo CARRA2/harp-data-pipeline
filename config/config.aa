@@ -1,0 +1,75 @@
+#
+# harp sqlite processing system configuration for ECMWF Atos
+#
+
+ECFPROJ_LIB="/perm/nhd/CARRA2/harp-data-pipeline"
+
+# harp-verif directory
+HARP_DIR="/perm/nhd/R/latest_harp_verif/harp-verif"
+
+# Model vfld data
+VFLD_DIR="/ec/res4/scratch/nhd/verification/vfld"
+# Model FCTABLE
+FCTABLE_DIR="/ec/res4/scratch/nhd/verification/DMI_data/harp_v0201/FCTABLE"
+
+# Vobs directory
+VOBS_DIR="/ec/res4/scratch/nhd/verification/DMI_data/vobs/MARS"
+VOBS_LOCAL="/ec/res4/scratch/nhd/verification/DMI_data/vobs/MARS"
+
+# A work directory for BUFR to vobs
+WRKDIR="/ec/res4/scratch/nhd/verification/ecflow_work"
+
+# List of STREAMS to process (defined under EXP/STREAM)
+ECFPROJ_STREAMS="carra2_198409 carra2_198909 carra2_199409 carra2_199909 carra2_200409 carra2_200909 carra2_201409 carra2_201909" # ERA5,vobs"
+export ECFPROJ_STREAMS
+
+# Define the DELAY in vfld/vobs generation and removal
+DELAY_VFLD=2 # Days
+DELAY_VOBS=2 # Days
+DELAY_GRIB=1 # Days
+DELAY_ARCHIVE_SQLITE=2 # Months
+
+# Minimum file size for vobs
+MINFSIZE=3000
+
+# Archive? Set to yes to copy the FCTABLE to ECFS
+ARCHIVE_FCTABLE="no"
+ARCH_ROOT="/duuw/verification/FCTABLE"
+VFLDARCH_ROOT="/duuw/verification/vfld"
+
+# Stuff for archiving the verification results
+HARP_ARCH_ROOT="/duuw/verification/harp"
+VRES_DIR="/ec/res4/scratch/duuw/verification/ecflow/Verification"
+LOOK_BACK_DAYS=2
+
+# A flag to clean out FCTABLEs after DELAY_ARCHIVE_SQLITE months
+CLEAN_FCTABLE="no"
+
+export VFLD_DIR FCTABLE_DIR VOBS_DIR VOBS_LOCAL WRKDIR HARP_DIR
+export BUFR_ECFS BUFR_DIR MINFSIZE RUN_BUFRVOBS
+export DELAY_VFLD DELAY_VOBS DELAY_ARCHIVE_SQLITE DELAY_GRIB
+export ARCHIVE_FCTABLE ARCH_ROOT CLEAN_FCTABLE VFLDARCH_ROOT
+export ICM_MIN ICM_INT ICM_MAX ICM_ROOT GRIB_DIR GRIB_VER_NLIST
+export HARP_ARCH_ROOT VRES_DIR LOOK_BACK_DAYS
+
+# Load modules
+#
+module unload eccodes
+module load ecmwf-toolbox
+module unload python
+module load python3/3.8.8-01
+module load ecflow ecflow/5.7.0
+module unload troika
+module load troika/0.1.4
+# Add in additional modules for bufr to vobs conversion
+#module load prgenv/gnu
+module unload openmpi
+module load openmpi/4.1.1.1
+module load R/4.2.2
+
+# ecFlow server
+# port_number is set based on the unique users numeric uid.
+export ECF_PORT=3141
+export ECF_HOST="ecflow-gen-${USER}-001"
+
+
