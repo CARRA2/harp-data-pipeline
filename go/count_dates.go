@@ -13,9 +13,39 @@ import (
 	"strings"
         "os"
         "bufio" //need to write a file
+        "io"
 )
 
 func main() {
+// Check if periods.txt exists
+	if _, err := os.Stat("periods.txt"); err == nil {
+		// periods.txt exists, so let's copy it to periods_prev.txt
+		srcFile, err := os.Open("periods.txt")
+		if err != nil {
+			log.Fatalf("Error opening periods.txt: %v", err)
+		}
+		defer srcFile.Close()
+
+		destFile, err := os.Create("periods_prev.txt")
+		if err != nil {
+			log.Fatalf("Error creating periods_prev.txt: %v", err)
+		}
+		defer destFile.Close()
+
+		_, err = io.Copy(destFile, srcFile)
+		if err != nil {
+			log.Fatalf("Error copying to periods_prev.txt: %v", err)
+		}
+		fmt.Println("Copied periods.txt to periods_prev.txt")
+	} else if os.IsNotExist(err) {
+		// periods.txt doesn't exist, so no need to copy
+		fmt.Println("No previous periods.txt found, proceeding without backup")
+	} else {
+		// Some other error occurred while checking for the file
+		log.Fatalf("Error checking periods.txt: %v", err)
+	}
+
+
 	streams := []string{
 		"carra2_198409", "carra2_198909", "carra2_199409",
 		"carra2_199909", "carra2_200409", "carra2_200909",
