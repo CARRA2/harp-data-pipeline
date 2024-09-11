@@ -8,12 +8,12 @@ source ../../config/config.aa
 
 check_progress()
 {
-  if [ ! -f $ECFPROJ_LIB/go/count_dates ]; then
+  if [ ! -f $ECFPROJ_LIB/go/data_preparation/count_dates ]; then
     ml go
-    go build $ECFPROJ_LIB/go/count_date.go
+    go build $ECFPROJ_LIB/go/data_preparation/count_date.go
     module unload go
   fi
-  $ECFPROJ_LIB/go/count_dates
+  $ECFPROJ_LIB/go/data_preparation/count_dates
 }
 run_vfld()
 {
@@ -35,4 +35,4 @@ done
 
 #check_progress
 run_vfld
-#run_vobs
+run_vobs

@@ -1,0 +1,54 @@
+# List of streams, indicating if they are active or not
+STREAMS:
+  carra2_198409:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_198409/progress.log # for test
+    BEG_DATE: 1984090100
+    END_DATE: 1985083021
+    USER: fac2
+    ACTIVE: True
+  carra2_198909:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_198909/progress.log
+    BEG_DATE: 1989090100
+    END_DATE: 1994083021
+    USER: fac2
+    ACTIVE: False
+  carra2_199409:
+    BEG_DATE: 1994090101
+    END_DATE: 1999083121
+    USER: fac2
+    ACTIVE: False
+  carra2_199909:
+    BEG_DATE: 1999090100
+    END_DATE: 2004083121
+    USER: fac2
+    ACTIVE: False
+  carra2_200409:
+    BEG_DATE: 2004090100
+    END_DATE: 2009083121
+    USER: fac2
+    ACTIVE: False
+  carra2_200909:
+    BEG_DATE: 2009090100
+    END_DATE: 2014083021
+    USER: fac2
+    ACTIVE: False
+  carra2_201409:
+    BEG_DATE: 2014090100
+    END_DATE: 2019083021
+    USER: fac2
+    ACTIVE: False
+  carra2_201909:
+    BEG_DATE: 2019090100
+    END_DATE: 2024083021
+    USER: fac2
+    ACTIVE: False
+# These are the paths for the different types of observations
+OBS:
+  S3SICE:
+    LOCALPATH: "/ec/res4/scratch/nhd/CARRA2/S3SICE"
+  MODIS:
+    LOCALPATH: "/ec/res4/scratch/nhd/CARRA2/MODIS"
+  AVHRR:
+    LOCALPATH: "/ec/res4/scratch/nhd/CARRA2/AVHRR"
+  OSISAF:
+    LOCALPATH: "/ec/res4/scratch/nhd/CARRA2/OSISAF"
