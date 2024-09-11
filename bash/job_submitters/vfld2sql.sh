@@ -111,14 +111,18 @@ copy_ERA5()
 # Now do the conversion of vfld to sqlite
 ######################################################
 
-CONFIG=config_local/config_carra2_prod.yml
 cd $HARP_DIR
 if [[ $MODEL == *"carra2"* ]]; then
-echo "Start conversion to sqlite"
-${HARP_DIR}/pre_processing/vfld2sql.R -start_date $SDATE -end_date $EDATE -config_file $CONFIG
+  CONFIG=config_local/config_carra2_prod.yml
+  echo "Start vfld conversion to sqlite for period $SDATE $EDATE for $MODEL"
+  ${HARP_DIR}/pre_processing/vfld2sql.R -start_date $SDATE -end_date $EDATE -config_file $CONFIG
+elif [[ $MODEL == "ERA5" ]]; then
+  CONFIG=config_local/config_ERA5_prod.yml
+  echo "Start vfld conversion to sqlite for period $SDATE $EDATE for $MODEL"
+  ${HARP_DIR}/pre_processing/vfld2sql.R -start_date $SDATE -end_date $EDATE -config_file $CONFIG
 else
-
-echo "Start conversion to sqlite ERA5"
+  echo "Conversion not considered for $MODEL on period $SDATE $EDATE"
+  exit 1
 fi
 
 ######################################################

@@ -6,7 +6,7 @@ EDATE=$2
 
 CONFIG=config_local/config_carra2_prod.yml
 cd $HARP_DIR
-echo "Start conversion of vobs to sqlite"
+echo "Start vobs conversion to sqlite for period $SDATE $EDATE"
 ${HARP_DIR}/pre_processing/vobs2sql.R -start_date $SDATE -end_date $EDATE -config_file $CONFIG
 
 ######################################################

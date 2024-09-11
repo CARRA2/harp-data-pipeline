@@ -6,16 +6,21 @@
 
 source ../../config/config.aa
 
-$ECFPROJ_LIB/go/count_dates
-
-exit 0
-
+check_progress()
+{
+  if [ ! -f $ECFPROJ_LIB/go/count_dates ]; then
+    ml go
+    go build $ECFPROJ_LIB/go/count_date.go
+    module unload go
+  fi
+  $ECFPROJ_LIB/go/count_dates
+}
 run_vfld()
 {
 for MODEL in $ECFPROJ_STREAMS; do
-echo $MODEL
-PERIOD=$(cat $ECFPROJ_LIB/go/periods.txt | grep $MODEL | awk '{print $2 " " $3}')
+PERIOD=$(cat $ECFPROJ_LIB/bash/job_submitters/periods.txt | grep $MODEL | awk '{print $2 " " $3}')
 $ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD $MODEL || exit 1
+#$ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD ERA5 || exit 1
 done
 }
 
@@ -28,5 +33,6 @@ $ECFPROJ_LIB/bash/job_submitters/vobs2sql.sh $PERIOD || exit 1
 done
 }
 
+#check_progress
 run_vfld
-run_vobs
+#run_vobs
