@@ -1,3 +1,15 @@
+/*
+ This program copies data from the following sources
+ S3SICE:
+  MODIS:
+  AVHRR:
+  OSISAF:
+Currently the origin paths are hard coded below
+The paths where the data is copied to is indicated
+in the config file in yml format.
+
+*/
+
 package main
 
 import (
@@ -17,7 +29,7 @@ import (
 // Define a few global variables to set paths
 var projLibPath string
 
-func init() {
+func Init() {
     // Initialize the global variable with the value from the environment variable
     projLibPath = os.Getenv("ECFPROJ_LIB")
 }
@@ -162,6 +174,15 @@ func executeEcpCommand(dataType, year, yearDir string) error {
     fmt.Printf("COMMAND %s\n", ecpCmd)
     return ecpCmd.Run()
 }
+func executeEcfsdirCommand(dataType, year, yearDir string) error {
+    fmt.Printf("Executing ecfsdir for %s to %s\n", dataType, yearDir)
+    //ecfsCmd := exec.Command("ecfsdir", fmt.Sprintf("ec:/fac2/CARRA2/obs/OSISAF_v2_20240424/%s %s", year), year)
+    //ecfsCmd := exec.Command("ecfsdir","-o",fmt.Sprintf("ec:/fac2/CARRA2/obs/OSISAF_v2_20240424/%s %s/%s", year, yearDir,year))
+    ecfsCmd := exec.Command("ecfsdir","-o",fmt.Sprintf("ec:/fac2/CARRA2/obs/OSISAF_v2_20240424/%s", year), fmt.Sprintf(" %s/%s",yearDir,year))
+
+    fmt.Printf("COMMAND %s\n", ecfsCmd)
+    return ecfsCmd.Run()
+}
 
 func executeOSISAFCommands(dataType, year, destinationPath string) error {
     fmt.Printf("Executing ecfsdir and rsync for %s to %s\n", dataType, year)
@@ -177,20 +198,25 @@ func executeOSISAFCommands(dataType, year, destinationPath string) error {
      }
 
     // Using a bash wrapper for ecfsdir. For some reason it fails!
-    ecfsCmd := exec.Command("/perm/nhd/CARRA2/harp-data-pipeline/go/data_fetchers/call_ecfs.sh",fmt.Sprintf("ec:/fac2/CARRA2/obs/OSISAF_v2_20240424/%s %s/%s", year, yearDir,year))
+    //ecfsCmd := exec.Command("/perm/nhd/CARRA2/harp-data-pipeline/go/data_fetchers/call_ecfs.sh",fmt.Sprintf("ec:/fac2/CARRA2/obs/OSISAF_v2_20240424/%s %s/%s", year, yearDir,year))
     //output, err_long := ecfsCmd.CombinedOutput()
     
     //fmt.Printf("ecfsdir COMMAND %s\n", ecfsCmd)
     //ecfsCmd.Dir = destinationPath
     //if err := ecfsCmd.Run(); err != nil {
-    //    fmt.Printf("ERROR before rsync COMMAND ")
-    //    fmt.Println(err)
-    //    fmt.Printf("Command failed with error: %v\n", err_long)
-    //    fmt.Printf("Output: %s\n", output)
-    //    //return err
-    //}
+   //if strings.Contains(string(output), "retrieved") {
+   //    fmt.Printf("Output contains 'retrieved', continuing without error\n")
+   //    fmt.Printf("Output: %s\n", output) 
+   //  } else {
+   //     fmt.Printf("ERROR from ecfsdir COMMAND ")
+   //     fmt.Printf("Command failed with error: %v\n", err_long)
+   //     fmt.Printf("Output: %s\n", output)
+   //     return err_long
+   // }
+
+    executeEcfsdirCommand(dataType, year, yearDir)
     
-    fmt.Printf("before rsync COMMAND ")
+    //fmt.Printf("before rsync COMMAND ")
     //	result := fmt.Sprintf("%s/%s??", yearDir, "file")
 
     rsyncCmd := exec.Command("rsync","-vaux", fmt.Sprintf("%s/%s/%s/",yearDir,year,"??"), yearDir)
@@ -199,10 +225,20 @@ func executeOSISAFCommands(dataType, year, destinationPath string) error {
     //rsyncCmd := exec.Command("mv", fmt.Sprintf("%s/%s/%s",yearDir,year,"??/*"), yearDir)
     //rsync -vaux /ec/res4/scratch/nhd/CARRA2/OSISAF/1991/??/ /ec/res4/scratch/nhd/CARRA2/OSISAF/1991
     fmt.Printf("rsync COMMAND %s\n", rsyncCmd)
-    rsyncCmd.Dir = destinationPath
-    if err := rsyncCmd.Run(); err != nil {
-        return err
-    }
+    //out, err := rsyncCmd.CombinedOutput()
+    //rsyncCmd.Dir = destinationPath
+    //if strings.Contains(string(out), "received") {
+    //   fmt.Printf("Output contains 'received', continuing without error\n")
+    //   fmt.Printf("Output: %s\n", out) 
+    // } else {
+    //    fmt.Printf("ERROR from rsync COMMAND ")
+    //    fmt.Printf("Command failed with error: %v\n", err)
+    //    fmt.Printf("Output: %s\n", out)
+    //    return err
+    //}
+    //if err := rsyncCmd.Run(); err != nil {
+    //    return err
+    //}
     // Cleanup
     cleanDir := fmt.Sprintf("%s/%s",yearDir,year)
     fmt.Printf("Cleaning up directory %s\n", cleanDir)
@@ -214,7 +250,7 @@ func main() {
 	// Command-line flag for specifying the YAML file
 	yamlFile := flag.String("config", "streams.yml", "Path to the YAML configuration file")
 	flag.Parse()
-        init()
+        Init()
         fmt.Printf("The path of the script is: %s\n", projLibPath)
 
 	// Load the YAML configuration

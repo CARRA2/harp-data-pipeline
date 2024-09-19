@@ -38,6 +38,7 @@ STREAMS:
     USER: fac2
     ACTIVE: False
   carra2_201909:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_201909/progress.log
     BEG_DATE: 2019090100
     END_DATE: 2024083021
     USER: fac2

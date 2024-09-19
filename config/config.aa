@@ -2,19 +2,19 @@
 # harp sqlite processing system configuration for ECMWF Atos
 #
 
-ECFPROJ_LIB="/perm/nhd/CARRA2/harp-data-pipeline"
+export ECFPROJ_LIB="/perm/nhd/CARRA2/harp-data-pipeline"
 
 # harp-verif directory
-HARP_DIR="/perm/nhd/R/latest_harp_verif/harp-verif"
+export HARP_DIR="/perm/nhd/R/latest_harp_verif/harp-verif"
 
 # Model vfld data
-VFLD_DIR="/ec/res4/scratch/nhd/verification/vfld"
+export VFLD_DIR="/ec/res4/scratch/nhd/verification/vfld"
 # Model FCTABLE
-FCTABLE_DIR="/ec/res4/scratch/nhd/verification/DMI_data/harp_v0201/FCTABLE"
+export FCTABLE_DIR="/ec/res4/scratch/nhd/verification/DMI_data/harp_v0201/FCTABLE"
 
 # Vobs directory
-VOBS_DIR="/ec/res4/scratch/nhd/verification/DMI_data/vobs/MARS"
-VOBS_LOCAL="/ec/res4/scratch/nhd/verification/DMI_data/vobs/MARS"
+export VOBS_DIR="/ec/res4/scratch/nhd/verification/DMI_data/vobs/MARS"
+export VOBS_LOCAL="/ec/res4/scratch/nhd/verification/DMI_data/vobs/MARS"
 
 # A work directory for BUFR to vobs
 WRKDIR="/ec/res4/scratch/nhd/verification/ecflow_work"
