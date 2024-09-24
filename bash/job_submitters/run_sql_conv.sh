@@ -35,7 +35,7 @@ $ECFPROJ_LIB/bash/job_submitters/vobs2sql.sh $PERIOD || exit 1
 done
 }
 
-#check_progress
+check_progress
 run_vfld
 exit
 run_vobs

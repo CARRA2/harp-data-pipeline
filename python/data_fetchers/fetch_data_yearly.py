@@ -4,6 +4,8 @@ import yaml
 import argparse
 from datetime import datetime
 import shutil
+import sys
+
 
 # Define a global variable to set paths
 proj_lib_path = None
@@ -38,6 +40,9 @@ def read_yaml(filename):
     return config
 
 def check_progress(stream_name, log_path):
+    if log_path is None:
+        print("log_path not defined!")
+        sys.exit(1)
     try:
         with open(log_path, 'r') as file:
             for line in file:
@@ -80,8 +85,14 @@ def execute_osisaf_commands(data_type, year, destination_path):
     print(f"Cleaning up directory {clean_dir}")
     shutil.rmtree(clean_dir)
 
-def execute_actions(year, obs):
-    data_types = ["S3SICE", "MODIS", "AVHRR", "OSISAF"]
+def execute_actions(year, obs, data_types):
+    """
+    This function copies all the data for the datatypes below
+    for a whole year.
+    Amount of data per year for each data type:
+    
+    """
+    #data_types = ["S3SICE", "MODIS", "AVHRR", "OSISAF"]
     current_year = int(year)
     
     for data_type in data_types:
@@ -91,15 +102,19 @@ def execute_actions(year, obs):
 
         year_dir = os.path.join(destination_path, year)
         if data_type == "S3SICE" and current_year >= 2021:
+            print(f"Fetching {data_type} via ecp for {current_year}")
             os.makedirs(year_dir, exist_ok=True)
             execute_ecp_command(data_type, year, year_dir)
         elif data_type == "AVHRR" and 1985 <= current_year <= 2000:
+            print(f"Fetching {data_type} via ecp for {current_year}")
             os.makedirs(year_dir, exist_ok=True)
             execute_ecp_command(data_type, year, year_dir)
         elif data_type == "MODIS" and 2000 <= current_year <= 2019:
+            print(f"Fetching {data_type} via ecp for {current_year}")
             os.makedirs(year_dir, exist_ok=True)
             execute_ecp_command(data_type, year, year_dir)
         elif data_type == "OSISAF":
+            print(f"Fetching {data_type} via ecfsdir for {current_year}")
             execute_osisaf_commands(data_type, year, destination_path)
 
 def main():
@@ -133,12 +148,27 @@ def main():
             continue
 
         if current_time.month == 12:
+            data_types = ["AVHRR", "OSISAF"]
             next_year = str(current_time.year + 1)
-            print(f"Executing actions for December, preparing for {next_year}...")
+            print(" ------------------------------------------ ")
+            print(f" >>>>> {stream_name} reached December <<<<<< ")
+            print(f"Copying all data for {data_types}, for {next_year}...")
             try:
-                execute_actions(next_year, config.OBS)
+                execute_actions(next_year, config.OBS,data_types)
             except Exception as e:
                 print(f"Failed to execute actions for {stream_name}: {e}")
+            print(" ------------------------------------------ ")
+        elif current_time.month == 2:
+            data_types = ["S3SICE", "MODIS"]
+            current_year = str(current_time.year)
+            print(" ------------------------------------------ ")
+            print(f" >>>>> {stream_name} reached month {current_time.month} of {current_year} <<<<<< ")
+            print(f"Copying all data for {data_types} for {current_year}...")
+            try:
+                execute_actions(current_year, config.OBS,data_types)
+            except Exception as e:
+                print(f"Failed to execute actions for {stream_name}: {e}")
+            print(" ------------------------------------------ ")
         else:
             print(f"No action needed for stream {stream_name} (current DTG: {current_dtg})")
 

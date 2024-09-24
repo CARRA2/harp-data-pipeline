@@ -5,18 +5,19 @@ STREAMS:
     BEG_DATE: 1984090100
     END_DATE: 1985083021
     USER: fac2
-    ACTIVE: True
+    ACTIVE: True 
   carra2_198909:
     PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_198909/progress.log
     BEG_DATE: 1989090100
     END_DATE: 1994083021
     USER: fac2
-    ACTIVE: False
+    ACTIVE: True
   carra2_199409:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_199409/progress.log
     BEG_DATE: 1994090101
     END_DATE: 1999083121
     USER: fac2
-    ACTIVE: False
+    ACTIVE: True
   carra2_199909:
     PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_199909/progress.log
     BEG_DATE: 1999090100
@@ -24,20 +25,23 @@ STREAMS:
     USER: fac2
     ACTIVE: True
   carra2_200409:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_200409/progress.log
     BEG_DATE: 2004090100
     END_DATE: 2009083121
     USER: fac2
-    ACTIVE: False
+    ACTIVE: True
   carra2_200909:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_200909/progress.log
     BEG_DATE: 2009090100
     END_DATE: 2014083021
     USER: fac2
-    ACTIVE: False
+    ACTIVE: True
   carra2_201409:
+    PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_201409/progress.log
     BEG_DATE: 2014090100
     END_DATE: 2019083021
     USER: fac2
-    ACTIVE: False
+    ACTIVE: True
   carra2_201909:
     PROGLOG: /ec/res4/scratch/nhd/CARRA2/dummy_paths/carra2_201909/progress.log
     BEG_DATE: 2019090100
