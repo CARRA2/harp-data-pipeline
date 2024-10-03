@@ -75,7 +75,8 @@ def execute_osisaf_commands(data_type, year, destination_path):
     output = run_ecfsdir(data_type, year, year_dir)
     print(f"Script output:\n{output}")
 
-    rsync_cmd = ['rsync', '-vaux', f'{year_dir}/{year}/??/', year_dir]
+    #rsync_cmd = ['rsync', '-vaux', f'{year_dir}/{year}/??/', year_dir]
+    rsync_cmd = ['rsync', '-vaux', f'{year_dir}/{year}/??', year_dir]
     cmd = " ".join(rsync_cmd)
     #print(f"rsync COMMAND {' '.join(rsync_cmd)}")
     print(f"rsync COMMAND: {cmd}")
