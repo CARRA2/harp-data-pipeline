@@ -3,8 +3,9 @@
 # BACKLOG for HL levels, AN files
 # All data is staged, retrieved and processed below. The output is one single file
 # The output is one file per day with all the daily means for the given level type
+source $ECFPROJ_LIB/share/config/config.aa
 
-source env.sh #set some environment variables below
+#source env.sh #set some environment variables below
 #SBATCH --mem-per-cpu=16GB
 #SBATCH --time=48:00:00
 #SBATCH --account=$SBU_CARRA_MEANS

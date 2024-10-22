@@ -3,7 +3,9 @@
 # All data is staged, retrieved and processed below. The output is one single file
 # The output is one file per day with all the daily means for the given level type
 
-source env.sh #set some environment variables below
+#source env.sh #set some environment variables below
+source $ECFPROJ_LIB/share/config/config.aa
+
 #SBATCH --mem-per-cpu=16GB
 #SBATCH --time=48:00:00
 #SBATCH --account=$SBU_CARRA_MEANS
@@ -47,7 +49,7 @@ fi
 YYYY=$(substring $period 1 4) #substring is parf ot the eclib tools
 MM=$(substring $period 5 6)
 
-WDIR=$MEANS_OUTPUT/$origin/$YYYY/$MM ; [[ ! -d $WDIR ]] && mkdir -p $WDIR
+WDIR=$MEANS_OUTPUT/$origin/$YYYY/$MM/SFC ; [[ ! -d $WDIR ]] && mkdir -p $WDIR
 
 maxday_month #from $HOME/bin/utils.sh, requires MM and YYYY to be set
 #get the date of yesterday for the start of the period

@@ -91,17 +91,16 @@ read -ra PARAMS <<< "$CARRA_PAR_FC_ACC"
 unset IFS
 
 
-#1. calculate the monthly means on each separate in the correspoding paths under $MEANS_OUTPUT/$origin/$YYYY/$MM/SUMS
-#2. merge the resulting monthly files into one
-#3. merge the pre-processed daily sums into one per day including all variables originally separated
+#calculate the monthly means on each separate in the correspoding paths under $MEANS_OUTPUT/$origin/$YYYY/$MM/SUMS
 echo "Doing monthly means of daily sums for all parameters in accumulated sums"
 do_monthly_fc_accum
 
-echo "Doing the merge"
-merge_month_files
-merge_day_files
+#Not doing this anymore, since the archival is done directly on the unmerged files
+#echo "Doing the merge"
+#merge_month_files
 
-exit
+#merge_day_files
 #remove the temporary directory where I split the parameters for the level type
-rm -rf $WDIR
+#NEED TO KEEP THIS! Remove it after archiving
+#rm -rf $WDIR
 

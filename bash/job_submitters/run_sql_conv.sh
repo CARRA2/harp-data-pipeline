@@ -19,9 +19,13 @@ check_progress()
 }
 run_vfld()
 {
-for MODEL in $ECFPROJ_STREAMS; do
-PERIOD=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep $MODEL | awk '{print $2 " " $3}')
-$ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD $MODEL || exit 1
+STREAMS=($(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | awk '{print $1}'))
+echo "Streams to process: ${STREAMS[@]}"
+#for STREAM in $ECFPROJ_STREAMS; do
+for STREAM in $STREAMS; do
+PERIOD=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep $STREAM | awk '{print $2 " " $3}')
+$ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD $STREAM || exit 1
+#turn this on once in a while:
 #$ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD ERA5 || exit 1
 done
 }
@@ -35,9 +39,18 @@ $ECFPROJ_LIB/bash/job_submitters/vobs2sql.sh $PERIOD || exit 1
 done
 }
 
-#check_progress
-PROGFILE=periods_selected.txt
-run_vfld
-exit
-#this one does not change much. Maybe run once in a while?
-run_vobs
+
+if [[ -z $1 ]]; then
+  echo "Updating periods in $PROGFILE"
+  #check_progress
+  run_vfld
+  #this one does not change much. Maybe run once in a while?
+  #run_vobs
+else
+  PROGFILE=$1
+  echo "Using selected periods in $PROGFILE"
+ #check_progress
+  run_vfld
+  #this one does not change much. Maybe run once in a while?
+  #run_vobs
+fi

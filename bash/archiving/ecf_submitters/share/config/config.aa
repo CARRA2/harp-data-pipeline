@@ -1,0 +1,38 @@
+#
+# TEST!
+# harp sqlite processing system configuration for ECMWF Atos
+#
+
+
+ECFPROJ_STREAMS="no-ar-pa"
+export ECFPROJ_STREAMS
+
+
+export MEANS_SCR
+
+# Load modules
+#
+module unload eccodes
+module unload ecmwf-toolbox
+module load ecmwf-toolbox/2021.08.3.0
+module unload python
+module load python3/3.8.8-01
+module unload ecflow
+module load ecflow ecflow/5.7.0
+module unload troika
+module load troika/0.1.4
+
+module load eclib
+
+# ecFlow server
+# port_number is set based on the unique users numeric uid.
+export ECF_PORT=3141
+export ECF_HOST="ecflow-gen-${USER}-001"
+
+
+export ECFPROJ_LIB=/perm/nhd/CARRA2/harp-data-pipeline/bash/archiving/ecf_submitters
+# directory with the scripts
+## MEANS_SCR="$HOME/scripts/carra/carra_means/bashscripts/backlog"
+source /perm/nhd/CARRA2/harp-data-pipeline/bash/archiving/config/config_archive.sh
+# List of STREAMS to process (defined under EXP/STREAM)
+source /perm/nhd/CARRA2/harp-data-pipeline/bin/utils.sh

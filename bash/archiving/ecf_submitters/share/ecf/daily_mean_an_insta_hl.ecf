@@ -1,0 +1,32 @@
+%include <%SUB_H%>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+daile_mean.ecf:
+
+REFERENCE:
+    TEST
+
+DESCRIPTION:
+    Some description in here
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/daily_mean_an_insta_hl.sh $CARRA_PERIOD $ORIGIN || exit 1
+#${MEANS_SCR}/confirm_daily_means.sh $CARRA_PERIOD $ORIGIN an hl || exit 1
+
+#/home/nhd/scripts/carra/carra_means/bashscripts/ecf_conf/bin/daily_mean_an_insta_hl.sh $CARRA_PERIOD $ORIGIN || exit 1
+%include <tail.h>
+
+%comment
+$Id$
+%end

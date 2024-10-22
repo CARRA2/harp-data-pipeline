@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #source ${ECFPROJ_LIB}/bin/env.sh #set some environment variables below
-source env.sh #set some environment variables below
+#source env.sh #set some environment variables below
+source $ECFPROJ_LIB/share/config/config.aa
+
 
 #SBATCH --mem-per-cpu=64GB
 #SBATCH --time=48:00:00
@@ -146,7 +148,7 @@ input_files=()
 for param in ${all_permitted[@]}; do
   OUT=$WDIR/monthly_${param}_${origin}_${type}_${levtype}_$period.grib2
   echo "Doing $param"
-  python ${ECFPROJ_LIB}/bash/archiving/ecf_submitters/bin/calc_monthly_minmax.py $tmpfile $OUT $param $origin $period
+  python ${ECFPROJ_LIB}/bin/calc_monthly_minmax.py $tmpfile $OUT $param $origin $period
   input_files+=("$OUT") # this creates the whole string for all the input files
 done
 rm $tmpfile

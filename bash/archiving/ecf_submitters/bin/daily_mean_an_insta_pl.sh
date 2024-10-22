@@ -3,7 +3,8 @@
 # All data is staged, retrieved and processed below. The output is one single file
 # The output is one file per day with all the daily means for the given level type
 
-source env.sh #set some environment variables below
+#source env.sh #set some environment variables below
+source $ECFPROJ_LIB/share/config/config.aa
 
 #SBATCH --mem-per-cpu=64GB
 #SBATCH --time=48:00:00

@@ -1,5 +1,7 @@
 #!/bin/bash
-source env.sh #set some environment variables below
+source $ECFPROJ_LIB/share/config/config.aa
+#source $ARPROJ_LIB/bash/archiving/ecf_submitters/bin/env.sh
+#source env.sh #set some environment variables below
 
 #SBATCH --mem-per-cpu=64GB
 #SBATCH --time=48:00:00
@@ -101,7 +103,7 @@ echo "Now merging the daily means"
  done 
 
 #remove the temporary directory where I split the parameters for the level type
-rm -rf $DATADIR
+ #### rm -rf $DATADIR
 
 }
 
@@ -109,10 +111,12 @@ rm -rf $DATADIR
 #the daily means of type sfc are treated separately, since they are all in one file per day already
 do_monthly_sfc()
 {
+LEVTYPE=${levtype^^} #capitalize for path
+DATADIR=$MEANS_OUTPUT/$origin/$YYYY/$MM/$LEVTYPE
 echo "Doing monthly means for analysis instantaneous parameters of type $levtype"
  input_files=()
  for date in $(seq -w $date_beg $date_end); do
-   IN=$WDIR/daily_mean_${origin}_${type}_${levtype}_${date}.grib2
+   IN=$DATADIR/daily_mean_${origin}_${type}_${levtype}_${date}.grib2
    if [ ! -f $IN ]; then
      echo "ERROR: data stream incomplete! Date $date is missing: $IN"
      exit 1
@@ -121,6 +125,9 @@ echo "Doing monthly means for analysis instantaneous parameters of type $levtype
  done
  OUT=$WDIR/monthly_mean_${origin}_${type}_${levtype}_$period.grib2
  $gmean -k date ${input_files[@]} -o $OUT  -n $MAXDAY
+ # move the daily means to the main directory?
+ # mv $DATADIR/daily_mean_${origin}_${type}_${levtype}_* $WDIR
+ # rmdir $DATADIR
 }
 
 
@@ -176,3 +183,12 @@ done
 levtype="sfc"
 echo "Doing monthly means for all parameters of leveltype $levtype"
 do_monthly_sfc
+
+# clean the old directories
+clean_old_data()
+{
+for LEVTYPE in HL ML PL; do
+DATADIR=$MEANS_OUTPUT/$origin/$YYYY/$MM/$LEVTYPE
+rm -rf $DATADIR
+done
+}

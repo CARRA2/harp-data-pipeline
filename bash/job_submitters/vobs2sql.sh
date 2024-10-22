@@ -4,6 +4,8 @@
 SDATE=$1
 EDATE=$2
 
+source ../../config/config.aa
+
 CONFIG=config_local/config_carra2_prod.yml
 cd $HARP_DIR
 echo "Start vobs conversion to sqlite for period $SDATE $EDATE"
