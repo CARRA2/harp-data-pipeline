@@ -71,6 +71,13 @@ suite.add_variable("MEANS_SCR", MEANS_SCR)
 # Add common "par" limit to jobs
 suite.add_limit("par", 10)
 
+SPLIT_SUM_VARS = CARRA_PAR_FC_ACC.split("/")
+# add variables for the sums
+suite.add_variable("CARRA_PAR_FC_ACC_batch1"," ".join(SPLIT_SUM_VARS[0:5]))
+suite.add_variable("CARRA_PAR_FC_ACC_batch2"," ".join(SPLIT_SUM_VARS[5:11]))
+suite.add_variable("CARRA_PAR_FC_ACC_batch3", " ".join(SPLIT_SUM_VARS[11:16]))
+suite.add_variable("CARRA_PAR_FC_ACC_batch4"," ".join(SPLIT_SUM_VARS[16:]))
+
 # ecflow does not like dashes, so renaming streams here
 names_dict={"no-ar-cw":"west","no-ar-ce":"east","no-ar-pa":"pan_arctic"}
 
@@ -106,7 +113,11 @@ def create_daily_monthly_means(stream:str):
 
     #then do fc files
     t1 = run.add_task(f"daily_minmax_fc_sfc")
-    t1 = run.add_task(f"daily_sum_fc_sfc")
+    #t1 = run.add_task(f"daily_sum_fc_sfc")
+    t1 = run.add_task(f"daily_sum_fc_sfc_batch1")
+    t1 = run.add_task(f"daily_sum_fc_sfc_batch2")
+    t1 = run.add_task(f"daily_sum_fc_sfc_batch3")
+    t1 = run.add_task(f"daily_sum_fc_sfc_batch4")
     #for param in CARRA_PAR_FC_ACC.split("/"):
     #    t1 = run.add_task(f"daily_sum_fc_sfc_{param}")
 
@@ -119,7 +130,12 @@ def create_daily_monthly_means(stream:str):
 
     #then do sums
     t1 = run.add_task("monthly_means_of_daily_sums")
-    t1.add_trigger( f"daily_sum_fc_sfc == complete" )
+    mm=[]
+    for bat in range(1,5):
+        mm.append(f"(daily_sum_fc_sfc_batch{bat} == complete)")
+    long_rule="("+" and ".join(mm)+")"
+    t1.add_trigger(long_rule)
+    #t1.add_trigger( f"daily_sum_fc_sfc == complete" )
     #mm=[]
     #for param in CARRA_PAR_FC_ACC.split("/"):
     #    mm.append(f"(daily_sum_fc_sfc_{param} == complete)")

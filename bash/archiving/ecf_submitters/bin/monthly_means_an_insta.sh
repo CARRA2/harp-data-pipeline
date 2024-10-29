@@ -1,5 +1,12 @@
 #!/bin/bash
-source $ECFPROJ_LIB/share/config/config.aa
+
+if [ -f ./env.sh ]; then
+  source ./env.sh
+else
+  source $ECFPROJ_LIB/share/config/config.aa
+fi
+
+#source $ECFPROJ_LIB/share/config/config.aa
 #source $ARPROJ_LIB/bash/archiving/ecf_submitters/bin/env.sh
 #source env.sh #set some environment variables below
 

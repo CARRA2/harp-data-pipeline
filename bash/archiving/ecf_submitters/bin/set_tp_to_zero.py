@@ -22,7 +22,8 @@ else:
     yyyymm = sys.argv[4]
     #nf = sys.argv[5]
 
-domain={"no-ar-ce": {"Nx": 789,"Ny" : 989}, "no-ar-cw":{"Nx": 1069,"Ny" : 1269}}
+domain={"no-ar-ce": {"Nx": 789,"Ny" : 989}, "no-ar-cw":{"Nx": 1069,"Ny" : 1269},
+       "no-ar-pa": {"Nx": 2869, "Ny": 2869}}
 param_code = 228228 #total precipitation
 
 gfile = open(infile)

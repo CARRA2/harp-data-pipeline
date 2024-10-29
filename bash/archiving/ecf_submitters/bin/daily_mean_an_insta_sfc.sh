@@ -86,3 +86,7 @@ eof
 done
 #remove the temporary input files
 rm -f $WDIR/${origin}_${type}_${levtype}_*.grib2
+
+#move the daily means to the main path
+mv $WDIR/daily_mean*grib2 $MEANS_OUTPUT/$origin/$YYYY/$MM/
+rmdir $WDIR

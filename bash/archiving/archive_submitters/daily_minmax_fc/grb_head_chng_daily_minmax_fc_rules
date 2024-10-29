@@ -1,0 +1,67 @@
+## Amend CARRA GRIB headers with grib_filter for daily minmax, forecasts.
+
+## WARNING: Assume daily minmax calculated using 3 hourly forecasts, T+0 to T+3:
+##          day,   00/03/06/09/12/15/18/21 UTC, T+00-01/T+01-02/T+02-03,
+## WARNING: Before running grib_filter, replace upper case strings below with actual values.
+
+## Usage: grib_filter -o output_file.grib rules_script input_file.grib
+
+  assert ( dataDate == DDATE );
+  assert ( dataTime == DTIME );
+#  assert ( editionNumber == 2 );
+## Template for statistical pprocessing
+  assert ( productDefinitionTemplateNumber == 8 );
+## Reference is start time of forecast
+  assert ( significanceOfReferenceTime == 1 );
+  assert ( startStep == 0 );
+  assert ( endStep == 1 );
+
+  set endStep=3;
+## Read the existing time-range block: forecast time (step)
+## Could use this transient information to populate the second time-range block but its messy
+  assert ( numberOfTimeRange == 1 );
+  transient tsp = typeOfStatisticalProcessing ;
+#  transient tti = typeOfTimeIncrement ;
+#  transient iutr = indicatorOfUnitForTimeRange ;
+#  transient ltr = lengthOfTimeRange ;
+#  transient iuti = indicatorOfUnitForTimeIncrement ;
+#  transient ti = timeIncrement ;
+  assert ( tsp == 2 || tsp == 3 );
+
+## 00 UTC on following day
+  set yearOfEndOfOverallTimeInterval=ENDYEAR;
+  set monthOfEndOfOverallTimeInterval=ENDMONTH;
+  set dayOfEndOfOverallTimeInterval=ENDDAY;
+  set hourOfEndOfOverallTimeInterval=ENDHOUR;
+  set minuteOfEndOfOverallTimeInterval=0;
+  set secondOfEndOfOverallTimeInterval=0;
+
+#  set numberOfMissingInStatisticalProcess=0;
+
+## The first time-range block: start time of forecast
+## The second time-range block: forecast time (step)
+  set numberOfTimeRange=2;
+  if ( tsp == 3 ) {
+## Minimum
+## Minimum
+   set typeOfStatisticalProcessing = {3, 3};
+}
+  if ( tsp == 2 ) {
+## Maximum
+## Maximum
+   set typeOfStatisticalProcessing = {2, 2};
+}
+## Start time of forecast is incremented
+## Forecast time is incremented
+  set typeOfTimeIncrement = {1, 2};
+## 21 hours range (00 to 21), range=end-start; (OR 24 hours)
+## 3 hours range (T+0 to T+3)
+  set indicatorOfUnitForTimeRange = {1, 1};
+  set lengthOfTimeRange = {21, 3};
+## 3 hourly increments
+## Continuous (model time step) increments
+  set indicatorOfUnitForTimeIncrement = {1, 255};
+  set timeIncrement = {3, 0};
+
+write;
+

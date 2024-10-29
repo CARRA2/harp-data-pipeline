@@ -1,4 +1,12 @@
 #!/bin/bash
+#!/usr/bin/env bash
+#SBATCH --error=vobs_sql.%j.err
+#SBATCH --output=vobs_sql.%j.out
+#SBATCH --job-name=vobs_conv
+#SBATCH --qos=nf
+#SBATCH --mem-per-cpu=16000
+#SBATCH --account="c3srrp"
+
 
 # CLI arguments:
 SDATE=$1

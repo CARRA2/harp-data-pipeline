@@ -1,0 +1,43 @@
+## Amend CARRA GRIB headers with grib_filter for monthly mean, analyses.
+
+## WARNING: Assume monthly mean calculated using:
+##          3 hourly analyses from 00 to 21 UTC.
+## WARNING: Before running grib_filter, replace upper case strings below with actual values.
+
+## Usage: grib_filter -o output_file.grib rules_script input_file.grib
+
+  assert ( dataDate == DDATE );
+  assert ( dataTime == DTIME );
+#  assert ( editionNumber == 2 );
+  assert ( productDefinitionTemplateNumber == 0 );
+#  assert ( productDefinitionTemplateNumber == 0 || productDefinitionTemplateNumber == 1 );
+## Start time of forecast
+  assert ( significanceOfReferenceTime == 1 );
+
+## Template for statistical pprocessing
+  set productDefinitionTemplateNumber=8;
+
+## 21 UTC on last day of month
+  set yearOfEndOfOverallTimeInterval=ENDYEAR;
+  set monthOfEndOfOverallTimeInterval=ENDMONTH;
+  set dayOfEndOfOverallTimeInterval=ENDDAY;
+  set hourOfEndOfOverallTimeInterval=ENDHOUR;
+  set minuteOfEndOfOverallTimeInterval=0;
+  set secondOfEndOfOverallTimeInterval=0;
+
+  set numberOfMissingInStatisticalProcess=0;
+
+## The first time-range block: start time of forecast
+  set numberOfTimeRange=1;
+## Averaging
+  set typeOfStatisticalProcessing=0;
+## Start time of forecast is incremented
+  set typeOfTimeIncrement=1;
+## NDAYS*24-3 hours range (00 to 21), range=end-start; (OR NDAYS*24 hours)
+  set indicatorOfUnitForTimeRange=1;
+  set lengthOfTimeRange=LTR;
+## 3 hourly increments
+  set indicatorOfUnitForTimeIncrement=1;
+  set timeIncrement=3;
+write;
+

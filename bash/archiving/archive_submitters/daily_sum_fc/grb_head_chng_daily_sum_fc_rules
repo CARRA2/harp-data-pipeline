@@ -1,0 +1,60 @@
+## Amend CARRA GRIB headers with grib_filter for daily sum, forecasts.
+
+## WARNING: Assume daily sum calculated using forecasts:
+##          day-1, 12 UTC, T+12 to T+18,
+##          day,   00 UTC, T+06 to T+18,
+##          day,   12 UTC, T+06 to T+12.
+## WARNING: Before running grib_filter, replace upper case strings below with actual values.
+
+## Usage: grib_filter -o output_file.grib rules_script input_file.grib
+
+  assert ( dataDate == DDATE );
+  assert ( dataTime == DTIME );
+#  assert ( editionNumber == 2 );
+## Template for statistical pprocessing
+  assert ( productDefinitionTemplateNumber == 8 );
+## Reference is start time of forecast
+  assert ( significanceOfReferenceTime == 1 );
+  assert ( endStep == 18 );
+
+  set startStep=6;
+## Read the existing time-range block: forecast time (step)
+## Could use this transient information to populate the second time-range block but its messy
+  assert ( numberOfTimeRange == 1 );
+#  transient tsp = typeOfStatisticalProcessing ;
+#  transient tti = typeOfTimeIncrement ;
+#  transient iutr = indicatorOfUnitForTimeRange ;
+#  transient ltr = lengthOfTimeRange ;
+#  transient iuti = indicatorOfUnitForTimeIncrement ;
+#  transient ti = timeIncrement ;
+
+# 00 UTC on following day
+  set yearOfEndOfOverallTimeInterval=ENDYEAR;
+  set monthOfEndOfOverallTimeInterval=ENDMONTH;
+  set dayOfEndOfOverallTimeInterval=ENDDAY;
+  set hourOfEndOfOverallTimeInterval=ENDHOUR;
+  set minuteOfEndOfOverallTimeInterval=0;
+  set secondOfEndOfOverallTimeInterval=0;
+
+#  set numberOfMissingInStatisticalProcess=0;
+
+## The first time-range block: start time of forecast
+## The second time-range block: forecast time (step)
+  set numberOfTimeRange=2;
+## Accumulation
+## Accumulation
+  set typeOfStatisticalProcessing = {1, 1};
+## Start time of forecast is incremented
+## Forecast time is incremented
+  set typeOfTimeIncrement = {1, 2};
+## 24 hours range (12 to 12), range=end-start; (OR 12 hours range (12 to 00), ignoring end points, OR 24 hours)
+## 12 hours range (T+6 to T+18)
+  set indicatorOfUnitForTimeRange = {1, 1};
+  set lengthOfTimeRange = {24, 12};
+## 12 hourly increments
+## Continuous (model time step) increments
+  set indicatorOfUnitForTimeIncrement = {1, 255};
+  set timeIncrement = {12, 0};
+
+write;
+
