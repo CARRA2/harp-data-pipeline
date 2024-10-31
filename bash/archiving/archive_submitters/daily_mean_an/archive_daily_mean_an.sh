@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ## script for amending CARRA GRIB headers for daily mean, analyses and then archiving data to MARS
-## CURRENTLY: only doing daily means of sfc type
 
 #set -evx
 source ./env.sh
@@ -16,13 +15,13 @@ DBASE=marsscratch
 extract_param()
 {
 FILT_FILE=$WRK/tmp_${LEVTYPE}_${PARAM}_${DATE}.grib2
-cat >  filter_var << EOF
+cat >  filter_var_${PERIOD} << EOF
 if ( param == $PARAM )
 {
   write "${FILT_FILE}";
 }
 EOF
-grib_filter filter_var $FILE
+grib_filter filter_var_${PERIOD} $FILE
 }
 
 archive_param()
@@ -102,7 +101,7 @@ WRK=$PATH_DATA/archive_daily_an
 echo "Processing an/insta for $PERIOD of $ORIGIN in $PATH_DATA"
 
 PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH/
-for LEVTYPE in hl ml pl; do
+for LEVTYPE in sfc hl ml pl; do
 echo "Doing level $LEVTYPE"
 #PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH/${LEVTYPE^^}
 for DATE in $(seq -w $date_beg $date_end); do

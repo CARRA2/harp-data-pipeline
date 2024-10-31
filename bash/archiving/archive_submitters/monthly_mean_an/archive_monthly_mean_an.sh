@@ -15,13 +15,13 @@ DBASE=marsscratch
 extract_param()
 {
 FILT_FILE=$WRK/tmp_${PARAM}_${DATE}.grib2
-cat >  filter_var << EOF
+cat >  filter_var_${PERIOD} << EOF
 if ( param == $PARAM )
 {
   write "${FILT_FILE}";
 }
 EOF
-grib_filter filter_var $FILE
+grib_filter filter_var_${PERIOD} $FILE
 }
 
 archive_param()

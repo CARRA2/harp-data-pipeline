@@ -119,7 +119,7 @@ echo "Now merging the daily means"
 do_monthly_sfc()
 {
 LEVTYPE=${levtype^^} #capitalize for path
-DATADIR=$MEANS_OUTPUT/$origin/$YYYY/$MM/$LEVTYPE
+DATADIR=$MEANS_OUTPUT/$origin/$YYYY/$MM/ #$LEVTYPE
 echo "Doing monthly means for analysis instantaneous parameters of type $levtype"
  input_files=()
  for date in $(seq -w $date_beg $date_end); do
@@ -171,7 +171,6 @@ par_dic[pl]=${parameters[@]}
 
 
 #calculate the monthly means on each separate in the correspoding paths under $MEANS_OUTPUT/$origin/$YYYY/$MM/PL,ML and HL
-
 for levtype in hl ml pl; do
 echo "Doing monthly means for all parameters of leveltype $levtype"
 PARAMS=${par_dic[$levtype]}

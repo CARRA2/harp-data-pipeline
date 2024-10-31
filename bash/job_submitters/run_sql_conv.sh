@@ -22,9 +22,11 @@ run_vfld()
 STREAMS=($(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | awk '{print $1}'))
 echo "Streams to process: ${STREAMS[@]}"
 #for STREAM in $ECFPROJ_STREAMS; do
-for STREAM in $STREAMS; do
+for STREAM in ${STREAMS[@]}; do
 PERIOD=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep $STREAM | awk '{print $2 " " $3}')
+echo "Doing $STREAM for $PERIOD"
 $ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD $STREAM || exit 1
+
 #turn this on once in a while:
 #$ECFPROJ_LIB/bash/job_submitters/vfld2sql.sh $PERIOD ERA5 || exit 1
 done
