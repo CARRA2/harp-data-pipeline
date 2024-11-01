@@ -43,9 +43,9 @@ def generate_filename(type_val, date_val, levtype, stream, param):
     return filename
 
 
-def create_directory(type_val, stream, levtype):
+def create_directory(type_val, stream, levtype,tmp_path_fetch):
     """Create and return directory path."""
-    dir_name = f"{type_val}_{stream}_{levtype}"
+    dir_name = os.path.join(tmp_path_fetch, f"{type_val}_{stream}_{levtype}")
     Path(dir_name).mkdir(parents=True, exist_ok=True)
     return dir_name
 
@@ -64,7 +64,7 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
     for config in retrieval_configs:
         # Create directory for this configuration
         output_dir = create_directory(
-            config["type"], config["stream"], config["levtype"]
+            config["type"], config["stream"], config["levtype"],tmp_path_fetch
         )
 
         # Split parameters
@@ -80,6 +80,7 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
             elif config["stream"] == "moda":
                 param_config["date"] = f'{start_date}'
             else:
+                stream = config["stream"]
                 print(f"Unknown stream: {stream}")
                 sys.exit(1)
 
@@ -90,10 +91,11 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
 
             # Add full path to output filename
             full_output_path = str(Path(output_dir) / output_filename)
-            if not os.path.isdir(os.path.join(tmp_path_fetch,output_dir)):
-                os.makedirs(os.path.join(tmp_path_fetch,output_dir))
-            long_path = os.path.join(tmp_path_fetch,full_output_path)
-            param_config["target"] = f'"{long_path}"'
+            #if not os.path.isdir(os.path.join(tmp_path_fetch,output_dir)):
+            #    os.makedirs(os.path.join(tmp_path_fetch,output_dir))
+            #long_path = os.path.join(tmp_path_fetch,full_output_path)
+            #param_config["target"] = f'"{long_path}"'
+            param_config["target"] = f'"{full_output_path}"'
 
             # Create MARS statement
             mars_statement = create_mars_statement(param_config)
@@ -121,8 +123,8 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
 
 def main():
     # Example usage
-    start_date = "1985-09-01"
-    end_date = "1985-09-30"
+    start_date = "1990-10-01"
+    end_date = "1990-10-31"
     period=start_date[0:4]+start_date[5:7]
     print(f"Doing {period}")
     tmp_path_fetch = "/ec/res4/scratch/nhd/mars-pull/carra2/fetch_to_archive"
