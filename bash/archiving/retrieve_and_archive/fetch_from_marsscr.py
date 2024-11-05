@@ -32,26 +32,41 @@ def create_mars_statement(params_dict):
     return statement.rstrip(",\n")
 
 
-def generate_filename(type_val, date_val, levtype, stream, param):
+def generate_filename(type_val, levtype, stream, param):
     """Generate filename for MARS statement file."""
     # Clean date string (remove /to/ if present)
-    if "/to/" in date_val:
-        date_val = date_val.split("/to/")[0]
+    #if "/to/" in date_val:
+    #    date_val = date_val.split("/to/")[0]
 
     # Create filename
-    filename = f"mars_call_{type_val}_{date_val}_{levtype}_{stream}_{param}.grib2"
+    filename = f"{type_val}_{stream}_{levtype}_{param}.grib2"
     return filename
 
 
 def create_directory(type_val, stream, levtype,tmp_path_fetch):
     """Create and return directory path."""
+
+    #special names:
+    # For parameters 201 and 202 of type_val fc 
+    # and stream dame use minmax as directory suffix
+    # For parameters other than this use 
     dir_name = os.path.join(tmp_path_fetch, f"{type_val}_{stream}_{levtype}")
     Path(dir_name).mkdir(parents=True, exist_ok=True)
     return dir_name
 
+def create_directory_extra(type_val,stream, levtype, extra, tmp_path_fetch):
+    """Create and return directory path for minmax or sums"""
+    #special names:
+    # For parameters 201 and 202 of type_val fc 
+    # and stream dame use minmax as directory suffix
+    # For parameters other than this use 
+    dir_name = os.path.join(tmp_path_fetch, f"{type_val}_{stream}_{levtype}_{extra}")
+    Path(dir_name).mkdir(parents=True, exist_ok=True)
+    return dir_name
 
 def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="mars_config.yaml"):
     """Process MARS statements for given date range."""
+    mm_params = ['201','202']
     # Load configurations from YAML file
     retrieval_configs = load_configs(config_file)
 
@@ -62,10 +77,10 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
     created_files = []
 
     for config in retrieval_configs:
+
         # Create directory for this configuration
-        output_dir = create_directory(
-            config["type"], config["stream"], config["levtype"],tmp_path_fetch
-        )
+        #if config["type"] != "fc":
+        #    output_dir = create_directory( config["type"], config["stream"], config["levtype"],tmp_path_fetch)
 
         # Split parameters
         params = config["param"].replace("\n", "").replace(" ", "").split("/")
@@ -86,27 +101,29 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
 
             # Generate output filename
             output_filename = generate_filename(
-                config["type"], start_date, config["levtype"], config["stream"], param
+                config["type"], config["levtype"], config["stream"], param
             )
 
+
+            if config["type"] == "fc" and config["stream"] == "dame" and param in mm_params:
+                output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"minmax",tmp_path_fetch)
+            elif config["type"] == "fc" and config["stream"] == "moda" and param in mm_params:
+                output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"minmax",tmp_path_fetch)
+            elif config["type"] == "fc" and config["stream"] == "dame" and param not in mm_params:
+                output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"sums",tmp_path_fetch)
+            elif config["type"] == "fc" and config["stream"] == "moda" and param not in mm_params:
+                output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"sums",tmp_path_fetch)
+            else:
+                output_dir = create_directory( config["type"], config["stream"], config["levtype"],tmp_path_fetch)
+                #print("standard output path for this case")
             # Add full path to output filename
             full_output_path = str(Path(output_dir) / output_filename)
-            #if not os.path.isdir(os.path.join(tmp_path_fetch,output_dir)):
-            #    os.makedirs(os.path.join(tmp_path_fetch,output_dir))
-            #long_path = os.path.join(tmp_path_fetch,full_output_path)
-            #param_config["target"] = f'"{long_path}"'
             param_config["target"] = f'"{full_output_path}"'
 
             # Create MARS statement
             mars_statement = create_mars_statement(param_config)
-
             # Create script filename
-            #script_filename = (
-            #)
-            #script_path = str(Path(output_dir) / script_filename)
-            script_filename = f"mars_script_{config['type']}_{config['levtype']}_{param}.mars"
-            if not os.path.isdir(os.path.join(tmp_path_fetch,"scr")):
-                os.makedirs(os.path.join(tmp_path_fetch,"scr"))
+            script_filename = f"fetch_script_{config['type']}_{config['levtype']}_{param}.mars"
             script_path = os.path.join(tmp_path_fetch,"scr",script_filename)
 
             # Write statement to file
@@ -123,14 +140,16 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
 
 def main():
     # Example usage
-    start_date = "1990-10-01"
-    end_date = "1990-10-31"
+    start_date = "1985-10-01"
+    end_date = "1985-10-31"
     period=start_date[0:4]+start_date[5:7]
     print(f"Doing {period}")
     tmp_path_fetch = "/ec/res4/scratch/nhd/mars-pull/carra2/fetch_to_archive"
     if not os.path.isdir(os.path.join(tmp_path_fetch,period)):
         os.makedirs(os.path.join(tmp_path_fetch,period))
     tmp_path_fetch = os.path.join(tmp_path_fetch,period)
+    if not os.path.isdir(os.path.join(tmp_path_fetch,"scr")):
+        os.makedirs(os.path.join(tmp_path_fetch,"scr"))
 
     print("Processing MARS statements...")
     created_files = process_mars_statements(start_date, end_date, tmp_path_fetch)
