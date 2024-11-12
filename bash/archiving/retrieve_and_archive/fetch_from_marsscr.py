@@ -4,6 +4,23 @@ from datetime import datetime, timedelta
 from pathlib import Path
 import sys
 
+def get_dates(period:str) -> None:
+    from datetime import datetime
+    import calendar
+
+    # Extract year and month
+    year = int(period[:4])
+    month = int(period[4:])
+
+    # Create first day of month
+    start_date = f"{year}-{month:02d}-01"
+
+    # Get last day of month using calendar
+    last_day = calendar.monthrange(year, month)[1]
+    end_date = f"{year}-{month:02d}-{last_day}"
+    return start_date, end_date
+
+
 def load_configs(config_file="mars_config.yaml"):
     """Load configurations from YAML file."""
     try:
@@ -140,11 +157,10 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
 
 def main():
     # Example usage
-    start_date = "1985-10-01"
-    end_date = "1985-10-31"
-    period=start_date[0:4]+start_date[5:7]
+    period = sys.argv[1]
+    tmp_path_fetch = sys.argv[2]
+    start_date, end_date = get_dates(period)
     print(f"Doing {period}")
-    tmp_path_fetch = "/ec/res4/scratch/nhd/mars-pull/carra2/fetch_to_archive"
     if not os.path.isdir(os.path.join(tmp_path_fetch,period)):
         os.makedirs(os.path.join(tmp_path_fetch,period))
     tmp_path_fetch = os.path.join(tmp_path_fetch,period)

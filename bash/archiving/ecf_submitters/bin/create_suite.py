@@ -135,23 +135,16 @@ def create_daily_monthly_means(stream:str):
         mm.append(f"(daily_sum_fc_sfc_batch{bat} == complete)")
     long_rule="("+" and ".join(mm)+")"
     t1.add_trigger(long_rule)
-    #t1.add_trigger( f"daily_sum_fc_sfc == complete" )
-    #mm=[]
-    #for param in CARRA_PAR_FC_ACC.split("/"):
-    #    mm.append(f"(daily_sum_fc_sfc_{param} == complete)")
-    #long_rule="("+" and ".join(mm)+")"
-    #t1.add_trigger(long_rule)
 
     t1 = run.add_task("monthly_minmax")
     t1.add_trigger( f"daily_minmax_fc_sfc == complete" )
 
-    #t1 = run.add_task("archive_to_mars")
-    #mm=[]
-    #for ltype in ["hl","pl","sfc","sol","ml"]:
-    #    mm.append(f"(monthly_mean_an_{ltype} == complete)")
-    #long_rule=f"((monthly_mean_fc_sfc == complete) and (monthly_mean_fc_accum == complete) and {mm[0]} and {mm[1]} and {mm[2]} and {mm[3]} and {mm[4]})"
-    #long_rule=f"((monthly_mean_fc_sfc == complete) and (monthly_mean_fc_accum == complete) and (monthly_mean_an_insta == complete))"
-    #t1.add_trigger(long_rule)
+    t1 = run.add_task(f"archive_to_marsscratch")
+    long_rule = "((monthly_means_of_daily_sums == complete) and (monthly_minmax == complete) and (monthly_means_an_insta == complete))"
+    t1.add_trigger(long_rule)
+
+    t1 = run.add_task(f"clean_scratch")
+    t1.add_trigger("(archive_to_marsscratch == complete)")
 
     return run
 

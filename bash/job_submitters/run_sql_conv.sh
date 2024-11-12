@@ -25,11 +25,11 @@ echo "Streams to process: ${STREAMS[@]}"
 for STREAM in ${STREAMS[@]}; do
 #NOTE: this only works for the case in which all stream names are different!
 PERIOD=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep $STREAM | awk '{print $2 " " $3}')
-
 # Option for when all streams have the same name (for example doing ERA5 for all periods)
-HITS=$(echo $PERIOD | wc -l)
-if [ $HITS > 1 ]; then
-  echo "More than one hit in the file! All the streams are the same: ${STREAMS[@]}!"
+HITS=$(echo $PERIOD | wc -w) #gotta get only 2 words here, otherwise streams repeated
+#echo "Hits $HITS"
+if [ $HITS -gt 2 ]; then
+  echo "More than 2 hits for $STREAM! Are all streams the same? ${STREAMS[@]}!"
   echo "Periods for $STREAM: $PERIOD"
   echo "Doing all periods for $STREAM and ignoring previous loop"
   PERIODS=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep ${STREAM} | awk '{print $2 "-" $3}')
