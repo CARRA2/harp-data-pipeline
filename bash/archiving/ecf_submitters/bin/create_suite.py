@@ -73,10 +73,28 @@ suite.add_limit("par", 10)
 
 SPLIT_SUM_VARS = CARRA_PAR_FC_ACC.split("/")
 # add variables for the sums
-suite.add_variable("CARRA_PAR_FC_ACC_batch1"," ".join(SPLIT_SUM_VARS[0:5]))
-suite.add_variable("CARRA_PAR_FC_ACC_batch2"," ".join(SPLIT_SUM_VARS[5:11]))
-suite.add_variable("CARRA_PAR_FC_ACC_batch3", " ".join(SPLIT_SUM_VARS[11:16]))
-suite.add_variable("CARRA_PAR_FC_ACC_batch4"," ".join(SPLIT_SUM_VARS[16:]))
+#Split sums in n batches to speed up processing
+NBATCH = int(os.environ['NBATCH'])
+
+#Note that this implies there should be 1 to NBATCH+1 ecf templates for the corresponding
+#scripts to be used.
+#Consider using a function to create them below? Or offline in main submission script
+
+#divide the sums into nbatches
+split_size = len(SPLIT_SUM_VARS)//NBATCH
+rem_split = len(SPLIT_SUM_VARS) % NBATCH
+start_chunk = 0
+for i in range(0,NBATCH):
+    end_chunk = start_chunk + split_size + (1 if i < rem_split else 0)
+    chunks_sum = SPLIT_SUM_VARS[start_chunk:end_chunk]
+    start_chunk = end_chunk
+    print(f"Adding {chunks_sum} to CARRA_PAR_FC_ACC_batch{i+1}")
+    suite.add_variable(f"CARRA_PAR_FC_ACC_batch{i+1}"," ".join(chunks_sum))
+
+#suite.add_variable("CARRA_PAR_FC_ACC_batch1"," ".join(SPLIT_SUM_VARS[0:5]))
+#suite.add_variable("CARRA_PAR_FC_ACC_batch2"," ".join(SPLIT_SUM_VARS[5:11]))
+#suite.add_variable("CARRA_PAR_FC_ACC_batch3", " ".join(SPLIT_SUM_VARS[11:16]))
+#suite.add_variable("CARRA_PAR_FC_ACC_batch4"," ".join(SPLIT_SUM_VARS[16:]))
 
 # ecflow does not like dashes, so renaming streams here
 names_dict={"no-ar-cw":"west","no-ar-ce":"east","no-ar-pa":"pan_arctic"}
@@ -114,10 +132,11 @@ def create_daily_monthly_means(stream:str):
     #then do fc files
     t1 = run.add_task(f"daily_minmax_fc_sfc")
     #t1 = run.add_task(f"daily_sum_fc_sfc")
-    t1 = run.add_task(f"daily_sum_fc_sfc_batch1")
-    t1 = run.add_task(f"daily_sum_fc_sfc_batch2")
-    t1 = run.add_task(f"daily_sum_fc_sfc_batch3")
-    t1 = run.add_task(f"daily_sum_fc_sfc_batch4")
+    for i in range(0,NBATCH):
+      t1 = run.add_task(f"daily_sum_fc_sfc_batch{i+1}")
+    #t1 = run.add_task(f"daily_sum_fc_sfc_batch2")
+    #t1 = run.add_task(f"daily_sum_fc_sfc_batch3")
+    #t1 = run.add_task(f"daily_sum_fc_sfc_batch4")
     #for param in CARRA_PAR_FC_ACC.split("/"):
     #    t1 = run.add_task(f"daily_sum_fc_sfc_{param}")
 
@@ -131,8 +150,9 @@ def create_daily_monthly_means(stream:str):
     #then do sums
     t1 = run.add_task("monthly_means_of_daily_sums")
     mm=[]
-    for bat in range(1,5):
-        mm.append(f"(daily_sum_fc_sfc_batch{bat} == complete)")
+    #for bat in range(1,5):
+    for bat in range(0,NBATCH):
+        mm.append(f"(daily_sum_fc_sfc_batch{bat+1} == complete)")
     long_rule="("+" and ".join(mm)+")"
     t1.add_trigger(long_rule)
 

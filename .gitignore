@@ -2,3 +2,6 @@
 *.out
 periods.txt
 .RData
+*def
+errors*log
+errors*txt

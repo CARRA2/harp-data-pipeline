@@ -42,19 +42,28 @@ else
   period=$1
   origin=$2
   param=$3
-  #day_beg=$3
-  #day_end=$4
+  #day_beg=$4
+  #day_end=$5
   #YYYY=$(substring $period 1 4) #substring is parf ot the eclib tools
   #MM=$(substring $period 5 6)
   #maxday_month #from $HOME/bin/utils.sh, requires MM and YYYY to be set
   #[ -z $day_beg ] && day_beg=01
   #[ -z $day_end ] && day_end=$MAXDAY
 fi
+
 YYYY=$(substring $period 1 4) #substring is parf ot the eclib tools
 MM=$(substring $period 5 6)
+if [[ -z $4 ]] && [[ -z $5 ]]; then
 maxday_month #from $HOME/bin/utils.sh, requires MM and YYYY to be set
 day_beg=01
 day_end=$MAXDAY
+echo "Processing the whole period: $day_beg to $day_end"
+else
+day_beg=$4
+day_end=$5
+echo "Processing only days: $day_beg to $day_end"
+fi
+
 
 WDIR=$MEANS_OUTPUT/$origin/$YYYY/$MM/SUMS ; [[ ! -d $WDIR ]] && mkdir -p $WDIR
 
@@ -67,7 +76,7 @@ date_ydat=$(newdate -D ${period}${day_beg} -1)
 alldates="$date_ydat/TO/$date_end"
 #param="all"
 echo "Doing mars staging for the period $date_beg to $date_end"
-com="origin=$origin,expver=$expver,class=$class,stream=$stream,type=$type,step=$step,levtype=$levtype,param=$param"
+com="origin=$origin,expver=$expver,class=$class,stream=$stream,type=$type,step=$step,levtype=$levtype,param=$params"
  mars << eof
      stage, $com, date=$alldates,time=0000/0300/0600/0900/1200/1500/1800/2100
 eof
@@ -89,6 +98,10 @@ com="origin=$origin,expver=$expver,class=$class,stream=$stream,type=$type,levtyp
 for date in $(seq -w $date_beg $date_end); do
     #1. pull the data
     gfile=$WDIR/daily_sum_${origin}_${type}_${levtype}_${date}_${param}.grib2
+    if [[ -f $gfile ]] && [[ $RE_WRITE == 0 ]] ; then
+     echo "$gfile is already downloaded"
+     else 
+     echo "Going to pull the data for $gfile"
       ydat=$(newdate -D $date -1)
      #Following internal discussion, for param M
      #acc24(N) = acc0to6 + acc6to18 + acc18to24   where
@@ -105,7 +118,7 @@ for date in $(seq -w $date_beg $date_end); do
      compute, formula="(yd_12_18 - yd_12_12) + (td_00_18 - td_00_06) + (td_12_12 - td_12_06)",
      target="$gfile"
 eof
-
+     fi
 
     chmod 755 $gfile
 done #day
@@ -149,7 +162,7 @@ done #day
 
 if [ -z $param ]; then
   echo "Doing all set of params"
-  do_all_prams
+  do_all_params
 else
   echo "Doing $param"
   do_one_param

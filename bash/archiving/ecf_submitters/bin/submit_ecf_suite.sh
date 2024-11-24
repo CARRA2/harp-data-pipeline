@@ -19,9 +19,19 @@ fi
 #export HHMM="2350"
 
 NAME_OF_SUITE="carra2_means"
+export NBATCH=4
 echo "Detault value of NAME_OF_SUITE variable: $NAME_OF_SUITE"
+echo "Splitting sums in $NBATCH pieces"
 echo "Edit this script to change it"
 
+#create new batch ecf script if not there
+for i in $(seq 1 $NBATCH); do
+  if [ ! -f ../share/ecf/daily_sum_fc_sfc_batch${i}.ecf ]; then
+    MSCR=../share/ecf/daily_sum_fc_sfc_batch${i}.ecf
+    echo "Creating missing ecf script $MSCR"
+    sed "s/REPLACEBATCHNUMBER/$i/g" ../share/ecf/daily_sum_fc_sfc_batch_template.ecf > $MSCR
+  fi
+done
 if [ -z $HHMM ]; then 
 echo "Running standard suite"
 echo "Name of the suite will be ${NAME_OF_SUITE}_$PERIOD"

@@ -15,13 +15,13 @@ DBASE=marsscratch
 extract_param()
 {
 FILT_FILE=$WRK/tmp_${LEVTYPE}_${PARAM}_${DATE}.grib2
-cat >  filter_var_${PERIOD} << EOF
+cat >  filter_var_${PERIOD}_${LEVTYPE} << EOF
 if ( param == $PARAM )
 {
   write "${FILT_FILE}";
 }
 EOF
-grib_filter filter_var_${PERIOD} $FILE
+grib_filter filter_var_${PERIOD}_${LEVTYPE} $FILE
 }
 
 archive_param()
@@ -125,8 +125,8 @@ for DATE in $(seq -w $date_beg $date_end); do
      OUT=$(grib_ls -p level $FILE  | sort -u | grep -v messages | grep -v grib2 | grep -v lev | sort -n)
      LEVELS=$(echo $OUT | sed "s# #/#g")
     for PARAM in ${PARAMS}; do
-      echo "Extracting $PARAM from $FILE to $FILT_FILE"
       extract_param
+      echo "Extracted $PARAM from $FILE to $FILT_FILE"
 
       FILB=$(echo $FILT_FILE|sed -e "1s/.grib2/_new.grib2/")
       echo "Updating the headers in $FILT_FILE. Writing to $FILB"
