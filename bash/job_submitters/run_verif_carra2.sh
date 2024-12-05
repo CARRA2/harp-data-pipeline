@@ -33,6 +33,7 @@ fi
 run_verif_current() {
 PARAMS=verification/set_params_carra2.R
 CONFIG=config_local/config_carra2_prod.yml
+### CONFIG=config_local/config_carra2_test.yml #for testing only
 STREAMS=($(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | awk '{print $1}'))
 cd ${HARP_DIR}/verification
 #for STREAM in $ECFPROJ_STREAMS; do
@@ -42,7 +43,7 @@ for STREAM in ${STREAMS[@]}; do
   #the verification will always start at the beginning of the current month
   #IDATE=${IDATE:0:6}0100
   echo "verification of $STREAM for ${IDATE}-${EDATE} using $CONFIG and $PARAMS"
-  #Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS
+  Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS
   Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS -params_list T2m,S10m
   Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS -params_list RH2m,Pmsl
   Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS -params_list CCtot,AccPcp12h
@@ -61,7 +62,7 @@ for STREAM in ${STREAMS[@]}; do
   IDATE=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep $STREAM | awk '{print $2}')
   EDATE=$(cat $ECFPROJ_LIB/bash/job_submitters/$PROGFILE | grep $STREAM | awk '{print $3}')
   #the verification will always start at the beginning of the current month
-  IDATE=${IDATE:0:6}0100
+  #IDATE=${IDATE:0:6}0100
   echo "Copying harp verification for ${IDATE}-${EDATE}"
   copy_plots
 done

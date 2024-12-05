@@ -115,10 +115,12 @@ cd $HARP_DIR
 if [[ $MODEL == *"carra2"* ]]; then
   CONFIG=config_local/config_carra2_prod.yml
   echo "Start vfld conversion to sqlite for period $SDATE $EDATE for $MODEL"
+  echo "Using $CONFIG"
   ${HARP_DIR}/pre_processing/vfld2sql.R -start_date $SDATE -end_date $EDATE -config_file $CONFIG
 elif [[ $MODEL == "ERA5" ]]; then
   CONFIG=config_local/config_ERA5_prod.yml
   echo "Start vfld conversion to sqlite for period $SDATE $EDATE for $MODEL"
+  echo "Using $CONFIG"
   ${HARP_DIR}/pre_processing/vfld2sql.R -start_date $SDATE -end_date $EDATE -config_file $CONFIG
 else
   echo "Conversion not considered for $MODEL on period $SDATE $EDATE"
