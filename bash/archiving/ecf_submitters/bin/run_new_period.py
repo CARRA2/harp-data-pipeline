@@ -17,6 +17,31 @@ def read_last_archival():
             streams[stream] = period
     return streams
 
+def backup_last_archival():
+    # Create a backup of last_archival_done.txt
+    backup_file = 'last_archival_done.txt.backup'
+    shutil.copy2('last_archival_done.txt', backup_file)
+    return backup_file
+
+def update_last_archival(stream, new_period):
+    # Read all lines
+    with open('last_archival_done.txt', 'r') as f:
+        lines = f.readlines()
+
+    # Update the specific stream's period
+    updated_lines = []
+    for line in lines:
+        current_stream, period = line.strip().split()
+        if current_stream == stream:
+            updated_lines.append(f"{stream} {new_period}\n")
+        else:
+            updated_lines.append(line)
+
+    # Write back to file
+    with open('last_archival_done.txt', 'w') as f:
+        f.writelines(updated_lines)
+
+
 def read_periods():
     # Read and parse periods.txt
     current_states = {}
@@ -57,7 +82,15 @@ def check_and_process():
             print(f"Processing {stream} for {next_period}, since last processed was {last_period} (currently on {current_timestamp})")
             # calling the script
             import subprocess
-            subprocess.run(['./submit_ecf_suite.sh', next_period])
+            result = subprocess.run(['./submit_ecf_suite.sh', next_period])
+            # Only update if the subprocess was successful
+            if result.returncode == 0:
+                update_last_archival(stream, next_period)
+                print(f"Updated last_archival_done.txt for {stream} with period {next_period}")
+            else:
+                # Restore backup if processing failed
+                shutil.copy2(backup_file, 'last_archival_done.txt')
+                print(f"Processing failed, restored from backup")
         else:
             print(f"Doing nothing for {stream}. Last processed was {last_period} (currently on {current_timestamp})")
 
