@@ -229,9 +229,9 @@ def create_slurm_script(script_list, output_slurm_file="run_mars_jobs_from_fac2.
     
     # SLURM header
     slurm_header = """#!/usr/bin/env bash
-#SBATCH --error=log_mars_archive.%j.err
-#SBATCH --output=log_mars_archive.%j.out
-#SBATCH --job-name=mars_archive
+#SBATCH --error=log_means_archive.%j.err
+#SBATCH --output=log_means_archive.%j.out
+#SBATCH --job-name=means_archive
 #SBATCH --qos=nf
 #SBATCH --mem-per-cpu=16000
 #SBATCH --account="c3srrp"

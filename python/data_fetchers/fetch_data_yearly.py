@@ -89,6 +89,7 @@ def check_copied(data_type, directory, year, month):
   files = [f for f in os.listdir(directory) if f.startswith(prefix)]
   if len(files) >= required_files:
       print(f"All required files for {data_type} are already present.")
+      touch_all(directory,files)
       return True
   else:
       print(f"Missing files for {data_type}. Required: {required_files}, Found: {len(files)}")
@@ -159,6 +160,59 @@ def execute_actions(year, obs, data_types):
               os.makedirs(year_dir, exist_ok=True)
               execute_ecp_command(data_type, year, year_dir)
 
+def run_when_needed(stream_name,current_time,current_dtg,config):
+    if current_time.month == 12:
+        data_types = ["AVHRR", "OSISAF"]
+        next_year = str(current_time.year + 1)
+        print(" --------------------------------------------------- ")
+        print(f" >>>> {stream_name} reached December <<<< ")
+        print(" --------------------------------------------------- ")
+        print(f"Copying all data for {data_types}, for {next_year}...")
+        try:
+            execute_actions(next_year, config.OBS, data_types)
+        except Exception as e:
+            print(f"Failed to execute actions for {stream_name}: {e}")
+        print(" --------------------------------------------------- ")
+    elif current_time.month == 2:
+        data_types = ["S3SICE", "MODIS"]
+        current_year = str(current_time.year)
+        print(" --------------------------------------------------- ")
+        print(f" >>>> {stream_name} reached month {current_time.month} of {current_year} <<<< ")
+        print(" --------------------------------------------------- ")
+        print(f"Copying all data for {data_types} for {current_year}...")
+        try:
+            execute_actions(current_year, config.OBS, data_types)
+        except Exception as e:
+            print(f"Failed to execute actions for {stream_name}: {e}")
+        print(" --------------------------------------------------- ")
+    else:
+        print(f"No action needed for stream {stream_name} (current DTG: {current_dtg})")
+
+def run_always(stream_name,current_time,config):
+    data_types = ["AVHRR", "OSISAF"]
+    next_year = str(current_time.year + 1)
+    print(" --------------------------------------------------- ")
+    print(f"Copying all data for {data_types}, for {next_year}...")
+    print(" --------------------------------------------------- ")
+    try:
+        execute_actions(next_year, config.OBS, data_types)
+    except Exception as e:
+        print(f"Failed to execute actions for {stream_name}: {e}")
+    print(" --------------------------------------------------- ")
+
+    data_types = ["S3SICE", "MODIS"]
+    current_year = str(current_time.year)
+
+    print(" --------------------------------------------------- ")
+    print(f"Copying all data for {data_types} for {current_year}...")
+    print(" --------------------------------------------------- ")
+    try:
+        execute_actions(current_year, config.OBS, data_types)
+    except Exception as e:
+        print(f"Failed to execute actions for {stream_name}: {e}")
+    print(" --------------------------------------------------- ")
+    
+
 def main():
   init()
   print(f"The path of the script is: {proj_lib_path}")
@@ -188,33 +242,21 @@ def main():
       except ValueError:
           print(f"Failed to parse DTG {current_dtg}")
           continue
+      
+      # This way only copies when data is needed
+      #run_when_needed(stream_name, current_time,current_dtg,config)
 
-      if current_time.month == 12:
-          data_types = ["AVHRR", "OSISAF"]
-          next_year = str(current_time.year + 1)
-          print(" --------------------------------------------------- ")
-          print(f" >>>> {stream_name} reached December <<<< ")
-          print(" --------------------------------------------------- ")
-          print(f"Copying all data for {data_types}, for {next_year}...")
-          try:
-              execute_actions(next_year, config.OBS, data_types)
-          except Exception as e:
-              print(f"Failed to execute actions for {stream_name}: {e}")
-          print(" --------------------------------------------------- ")
-      elif current_time.month == 2:
-          data_types = ["S3SICE", "MODIS"]
-          current_year = str(current_time.year)
-          print(" --------------------------------------------------- ")
-          print(f" >>>> {stream_name} reached month {current_time.month} of {current_year} <<<< ")
-          print(" --------------------------------------------------- ")
-          print(f"Copying all data for {data_types} for {current_year}...")
-          try:
-              execute_actions(current_year, config.OBS, data_types)
-          except Exception as e:
-              print(f"Failed to execute actions for {stream_name}: {e}")
-          print(" --------------------------------------------------- ")
-      else:
-          print(f"No action needed for stream {stream_name} (current DTG: {current_dtg})")
+      # Switched to this more explicit way to avoid
+      # missing data on 20241216
+      # It will also touch the files
+      run_always(stream_name, current_time,config)
+
+def touch_all(directory,files):
+    print(f"Touching all files in {directory}")
+    for f in files:
+        tfile = os.path.join(directory,f)
+        cmd = ['touch',tfile]
+        subprocess.run(cmd, check=True)
 
 if __name__ == "__main__":
   main()

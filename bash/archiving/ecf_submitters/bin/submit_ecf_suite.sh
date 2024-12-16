@@ -36,7 +36,7 @@ if [ -z $HHMM ]; then
 echo "Running standard suite"
 echo "Name of the suite will be ${NAME_OF_SUITE}_$PERIOD"
 ./ecfproj_start -f -s $PERIOD -c means -e ${NAME_OF_SUITE}_$PERIOD
-exit 0
+exit 0 #othewise it will jump to the next!
 fi
 
 if [ -n $2 ]; then
@@ -45,7 +45,7 @@ echo "Name of the suite will be ${NAME_OF_SUITE}_$PERIOD"
 export USE_TIMED=1
 export HHMM=$2
 ./ecfproj_start -f -s $PERIOD -c means -e ${NAME_OF_SUITE}_$PERIOD
-exit 0
+exit 0 #same as above
 fi
 
 # for daily means for ML i need more memory so I used the config ending in means_ml
