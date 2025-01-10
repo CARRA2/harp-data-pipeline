@@ -1,4 +1,9 @@
 import datetime
+import os
+os.environ['NBATCH'] = '4'
+os.environ["ECF_PORT"] = "3141"
+os.environ["ECF_HOST"] = "ecflow-gen-nhd-001"
+
 
 def parse_timestamp(timestamp_str):
     # Convert timestamp string (YYYYMMDDHH) to datetime
@@ -81,8 +86,12 @@ def check_and_process():
             # If current timestamp is in a later period, trigger processing
             print(f"Processing {stream} for {next_period}, since last processed was {last_period} (currently on {current_timestamp})")
             # calling the script
+            # Set environment variable
+            os.environ['CARRA_PERIOD'] = f'{next_period}'
+            os.environ['EXP'] = f'carra2_means_{next_period}'
             import subprocess
-            result = subprocess.run(['./submit_ecf_suite.sh', next_period])
+            #result = subprocess.run(['./submit_ecf_suite.sh', next_period])
+            result = subprocess.run(['./ecfproj_start', f'-f -s {next_period} -c means -e carra2_means_{next_period}'])
             # Only update if the subprocess was successful
             if result.returncode == 0:
                 update_last_archival(stream, next_period)

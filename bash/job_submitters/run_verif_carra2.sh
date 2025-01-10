@@ -29,6 +29,21 @@ else
 fi
 }
 
+copy_vprof_plots() {
+#Copy the png from the vertical verification
+PERIOD=${IDATE}-${EDATE}
+PLOTS=/ec/res4/scratch/nhd/verification/plots/ERA5_profiles
+VM_PATH=/srv/shiny-server/carra2_app/plots/$STREAM/${PERIOD}
+TO_SEND=$PLOTS/${PERIOD}
+if [ -d $TO_SEND ]; then 
+  chmod -R 755 $TO_SEND
+  echo "Transferring ERA5 vertical profile special comparison of $STREAM for $PERIOD"
+  rsync -vaux $TO_SEND/ tenantadmin@136.156.128.148:$VM_PATH
+else
+  echo "$TO_SEND does not exist for $STREAM!"
+fi
+}
+
 
 run_verif_current() {
 PARAMS=verification/set_params_carra2.R
@@ -48,6 +63,13 @@ for STREAM in ${STREAMS[@]}; do
   Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS -params_list RH2m,Pmsl
   Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS -params_list CCtot,AccPcp12h
   Rscript point_verif.R -config_file $CONFIG -start_date $IDATE -end_date $EDATE -params_file $PARAMS -params_list S,T
+
+# Do the ERA5 vertical profiles comparison
+# Will only work if I previously did the FCTABLE processing for the vfld ERA5 separate path for the profiles
+# See the script ./convert_data_for_profiles.sh in/perm/nhd/R/harp-verif/pre_processing for details
+echo "Doing the vertical profile verification using ERA5 for $STREAM on period $IDATE $EDATE"
+./run_verif_era5_only_vprofs.sh $IDATE $EDATE
+echo "Done with the vertical profile verification using ERA5"
 done
 cd -
 }
@@ -65,6 +87,7 @@ for STREAM in ${STREAMS[@]}; do
   #IDATE=${IDATE:0:6}0100
   echo "Copying harp verification for ${IDATE}-${EDATE}"
   copy_plots
+  copy_vprof_plots #this one only for the vertical profiles special comparison
 done
 cd -
 }

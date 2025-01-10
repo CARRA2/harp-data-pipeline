@@ -20,7 +20,7 @@ fi
 
 NAME_OF_SUITE="carra2_means"
 export NBATCH=4
-echo "Detault value of NAME_OF_SUITE variable: $NAME_OF_SUITE"
+echo "Default value of NAME_OF_SUITE variable: $NAME_OF_SUITE"
 echo "Splitting sums in $NBATCH pieces"
 echo "Edit this script to change it"
 
