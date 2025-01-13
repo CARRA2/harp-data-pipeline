@@ -34,6 +34,7 @@ IFS='/'
 read -ra all_params <<< "$param"
 unset IFS #Otherwise this will fuck up my loops below
 
+RE_WRITE=0 #for testing. Set to 1 if want to re-write the data
 levelist="10/20/30/50/70/100/150/200/250/300/400/500/600/700/750/800/825/850/875/900/925/950/1000"
 
 if [[ -z $1 ]]; then
@@ -79,11 +80,18 @@ for param in "${all_params[@]}"; do
     #1. pull the data
     #gfile=$WDIR/${origin}_${type}_${levtype}_${date}.grib2
     gfile=$WDIR/${origin}_${type}_${levtype}_${date}_${param}.grib2
+
+    if [[ -f $gfile ]] && [[ $RE_WRITE == 0 ]] ; then
+     echo "$gfile is already downloaded"
+     else
+     echo "Going to pull the data for $gfile"
+
       ydat=$(newdate -D $date -1)
      com="origin=$origin,expver=$expver,class=$class,stream=$stream,type=$type,step=$step,levtype=$levtype,levelist=$levelist,param=$param"
      mars << eof
      retrieve, $com, date=$date,time=0/to/21/by/3,target="$gfile"
 eof
+   fi #if loop to decide if pull out file
    base=$(basename $gfile)
    mfile=$WDIR/daily_mean_${base}
   #$gmean -k date,time -i $gfile -o $mfile -s date=$date,time=00,step=24 -n 8
@@ -94,5 +102,5 @@ eof
 done #param
 done #date
 
-remove the temporary input files
+#remove the temporary input files
 rm -f $WDIR/${origin}_${type}_${levtype}_*.grib2

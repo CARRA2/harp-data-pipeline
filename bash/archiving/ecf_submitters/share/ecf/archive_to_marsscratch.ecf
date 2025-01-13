@@ -1,0 +1,57 @@
+%include <%SUB_H%>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+daily_sum_fc_sfc.ecf:
+
+REFERENCE:
+    climate means for CARRA2
+
+DESCRIPTION:
+    archive the means to marsscratch
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+params=%CARRA_PAR_FC_ACC%
+CWD=$PWD
+cd ${MEANS_SCR}/../../archive_submitters
+
+cd daily_mean_an
+./archive_daily_mean_an.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd daily_minmax_fc
+./archive_daily_minmax_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd daily_sum_fc
+./archive_daily_sums_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd monthly_mean_an
+./archive_monthly_mean_an.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd monthly_minmax_fc/
+./archive_monthly_minmax_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd monthly_daysum_fc/
+./archive_monthly_daysum_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd $CWD
+%include <tail.h>
+
+%comment
+$Id$
+%end

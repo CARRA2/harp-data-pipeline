@@ -1,0 +1,29 @@
+%include <sbatch.means_ml.h>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+clean_scratch.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    Remove all production files from $SCRATCH area
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/clean_scratch.sh $CARRA_PERIOD $ORIGIN || exit 1
+%include <tail.h>
+
+%comment
+$Id$
+%end
