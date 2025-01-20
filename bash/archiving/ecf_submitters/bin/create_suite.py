@@ -62,6 +62,7 @@ suite.add_variable("ECF_JOB_CMD",       ECF_JOB_CMD)
 suite.add_variable("ECF_KILL_CMD",      ECF_KILL_CMD)
 suite.add_variable("ECF_STATUS_CMD",    ECF_STATUS_CMD)
 suite.add_variable("QUEUE",             'nf')
+suite.add_variable("SBU_CARRA_MEANS",             'c3srrp') # THIS is CARRA2!
 suite.add_variable("SUB_H",             "sbatch." + ECFPROJ_CONFIG + ".h")
 # Added
 suite.add_variable("TASK",           "")

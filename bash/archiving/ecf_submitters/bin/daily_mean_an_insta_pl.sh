@@ -14,7 +14,8 @@ fi
 
 #SBATCH --mem-per-cpu=64GB
 #SBATCH --time=48:00:00
-#SBATCH --account=$SBU_CARRA_MEANS
+#SBATCH --account=c3srrp
+####SBATCH --account=$SBU_CARRA_MEANS
 
 ml ecmwf-toolbox #eccodes and the like
 ml eclib # includes scripts like newdata to get correct dates, including leap years

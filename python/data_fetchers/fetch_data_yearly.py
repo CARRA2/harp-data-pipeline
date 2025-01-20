@@ -82,9 +82,13 @@ def check_copied(data_type, directory, year, month):
 
   if not os.path.exists(directory):
       print(f"Directory {directory} does not exist.")
-      print(f"Data not copied yet. Might be because of year: {year}")
-      print(f"Data availability: {albedo_data_rules[data_type]}")
-      return False
+      print(f"Data not copied yet. Might be because of the year: {year}")
+      if data_type != "OSISAF":
+          print(f"Data availability: {albedo_data_rules[data_type]}")
+          return False
+      else:
+          print(f"This data is {data_type} and there is no data present on {year}")
+          return False
 
   files = [f for f in os.listdir(directory) if f.startswith(prefix)]
   if len(files) >= required_files:

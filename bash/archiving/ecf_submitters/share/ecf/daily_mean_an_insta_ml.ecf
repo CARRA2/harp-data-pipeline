@@ -1,0 +1,31 @@
+%include <sbatch.means_ml.h>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+daily_mean_an_ml.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    CARRA means for ml levels
+    Note the hardcoded sbatch config unlike the rest of the scripts
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/daily_mean_an_insta_ml.sh $CARRA_PERIOD $ORIGIN || exit 1
+#Not running the confirm part, since the merge is done in the monthly means for ML type
+%include <tail.h>
+
+%comment
+$Id$
+%end

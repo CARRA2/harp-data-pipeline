@@ -1,0 +1,34 @@
+%include <%SUB_H%>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+daily_sum_fc_sfc.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    CARRA daily sums for fc files sfc levels
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+PARAMS=(%CARRA_PAR_FC_ACC_batch9%)
+
+echo "Doing ${PARAMS[@]}"
+for PAR in ${PARAMS[@]}; do
+${MEANS_SCR}/daily_sum_fc_accum_sfc.sh $CARRA_PERIOD $ORIGIN $PAR || exit 1
+done
+%include <tail.h>
+
+%comment
+$Id$
+%end

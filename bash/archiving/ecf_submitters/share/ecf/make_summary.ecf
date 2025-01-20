@@ -1,0 +1,30 @@
+%include <sbatch.means_ml.h>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+make_summary.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    Create an ascii file with a summary of the fields
+    on the CARRA monthly means for daily and monthly means
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/count_all.sh $CARRA_PERIOD $ORIGIN || exit 1
+%include <tail.h>
+
+%comment
+$Id$
+%end

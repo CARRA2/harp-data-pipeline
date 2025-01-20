@@ -1,0 +1,29 @@
+%include <%SUB_H%>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+monthly_minmax.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    CARRA monthly min or max for fc and sfc levels variables
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/monthly_minmax.sh $CARRA_PERIOD $ORIGIN || exit 1
+%include <tail.h>
+
+%comment
+$Id$
+%end

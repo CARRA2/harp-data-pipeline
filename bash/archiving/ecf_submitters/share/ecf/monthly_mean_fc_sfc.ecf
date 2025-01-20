@@ -1,0 +1,29 @@
+%include <%SUB_H%>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+monthly_mean_fc_sfc.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    CARRA monthly means for fc and sfc levels
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/monthly_means_insta_accum.sh $CARRA_PERIOD $ORIGIN fc sfc || exit 1
+%include <tail.h>
+
+%comment
+$Id$
+%end

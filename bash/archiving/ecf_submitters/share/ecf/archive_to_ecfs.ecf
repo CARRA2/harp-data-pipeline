@@ -1,0 +1,29 @@
+%include <sbatch.means_ml.h>
+%include <head.h>
+%include <ecfprojhead.h>
+
+%manual
+archive_to_ecfs.ecf:
+
+REFERENCE:
+    climate means for CARRA
+
+DESCRIPTION:
+    Copy all files to ecfs (temporarily)
+
+1ST LINE:
+    Instructions for "1st line" operators.
+
+2ND LINE:
+    Instructions for "2nd line" on-call team.
+
+%end
+
+ORIGIN=%ECFPROJ_STREAM%
+MEANS_SCR=%MEANS_SCR%
+${MEANS_SCR}/copy2ecfs.sh $CARRA_PERIOD $ORIGIN || exit 1
+%include <tail.h>
+
+%comment
+$Id$
+%end
