@@ -27,7 +27,8 @@ stream=oper
 type=an  
 step=3 
 levtype=hl
-levelist="500/400/300/250/200/150/100/75/50/30/15" 
+#levelist="500/400/300/250/200/150/100/75/50/30/15"  CARRA1
+levelist=15/30/50/75/100/150/200/250/300/400/500/750/1000/1250/1500/2000/2500/3000 #CARRA2 has more levels
 param=$CARRA_PAR_AN_HL
 
 # Set the Internal Field Separator to "/"

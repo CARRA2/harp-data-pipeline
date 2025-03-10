@@ -233,7 +233,7 @@ def create_slurm_script(script_list, output_slurm_file="run_mars_jobs_from_fac2.
 #SBATCH --output=log_means_archive.%j.out
 #SBATCH --job-name=means_archive
 #SBATCH --qos=nf
-#SBATCH --mem-per-cpu=16000
+#SBATCH --time=8:00:00
 #SBATCH --account="c3srrp"
 
 """

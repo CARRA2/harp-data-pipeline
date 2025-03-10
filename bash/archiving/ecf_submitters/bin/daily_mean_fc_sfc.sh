@@ -8,7 +8,13 @@
 # min or max or the corresponding variable. See below for details
 
 #source ${ECFPROJ_LIB}/bin/env.sh #set some environment variables below
-source env.sh #set some environment variables below
+#source env.sh #set some environment variables below
+if [ -f ./env.sh ]; then
+  source ./env.sh
+else
+  source $ECFPROJ_LIB/share/config/config.aa
+fi
+
 
 #SBATCH --mem-per-cpu=16GB
 #SBATCH --time=48:00:00

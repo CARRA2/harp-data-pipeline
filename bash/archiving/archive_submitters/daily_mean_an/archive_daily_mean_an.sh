@@ -10,6 +10,27 @@ source ./load_eccodes.sh
 #SBATCH --time=48:00:00
 #SBATCH --account=$SBU_CARRA_MEANS
 
+
+#find_differences()
+#{
+#
+## Convert the strings into arrays
+#IFS='/' read -ra ARRAY1 <<< "$CARRA_PAR_AN_SFC"
+#IFS='/' read -ra ARRAY2 <<< "$CARRA_PAR_AN_SFC_ARXIV"
+#
+## Compare arrays element by element
+#for i in "${!ARRAY1[@]}"; do
+#    if [ "${ARRAY1[$i]}" != "${ARRAY2[$i]}" ]; then
+#        echo "Position $i differs:"
+#        echo "CARRA_PAR_AN_SFC: ${ARRAY1[$i]}"
+#        echo "CARRA_PAR_AN_SFC_ARXIV: ${ARRAY2[$i]}"
+#        echo "---"
+#    fi
+#done
+#unset IFS
+#
+#}
+
 DBASE=marsscratch
 
 extract_param()
@@ -26,6 +47,15 @@ grib_filter filter_var_${PERIOD}_${LEVTYPE} $FILE
 
 archive_param()
 {
+if [[ $PARAM == 173 ]]; then
+echo "Special case for 173 (roughness)"
+LOCAL_PARAM=235244
+elif [[ $PARAM == 260649 ]]; then
+echo "Special case for 260649"
+LOCAL_PARAM=263006
+else
+LOCAL_PARAM=$PARAM
+fi
 mars   << EOF
     ARCHIVE,
     CLASS      = RR,
@@ -35,7 +65,7 @@ mars   << EOF
     EXPVER     = prod,
     LEVELIST   = $LEVELS,
     LEVTYPE    = $LEVTYPE,
-    PARAM      = $PARAM,
+    PARAM      = $LOCAL_PARAM,
     DATE       = $DATE,
     TIME       = 0000,
     STEP       = 0,

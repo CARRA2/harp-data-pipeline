@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --mem-per-cpu=16GB
-#SBATCH --time=12:00:00
+#SBATCH --time=00:30:00
 #SBATCH --error=log_means_daily.%j.err
 #SBATCH --output=log_means_daily.%j.out
 

@@ -104,14 +104,15 @@ eof
      target="$g_tmin"
 eof
 
-#    #10m wind gust
-#    g_wg=$WDIR/49_${origin}_${type}_${levtype}_${date}.grib2
-#    com="origin=$origin,date=$date,expver=$expver,class=$class,stream=$stream,type=$type,levtype=$levtype,levelist=$levelist,param=49,time=0000/0300/0600/0900/1200/1500/1800/2100,step=1/2/3"
-#     mars << eof
-#     retrieve, $com,fieldset=10fg
-#     compute, formula="max(10fg)",
-#     target="$g_wg"
-#eof
+    #10m wind gust
+    g_wg=$WDIR/228029_${origin}_${type}_${levtype}_${date}.grib2
+    com="origin=$origin,date=$date,expver=$expver,class=$class,stream=$stream,type=$type,levtype=$levtype,levelist=$levelist,param=228029,time=0000/0300/0600/0900/1200/1500/1800/2100,step=1/2/3"
+    #com="origin=$origin,date=$date,expver=$expver,class=$class,stream=$stream,type=$type,levtype=$levtype,levelist=$levelist,param=228029,time=0000/0300/0600/0900/1200/1500/1800/2100,step=3/4/5"
+     mars << eof
+     retrieve, $com,fieldset=10fg
+     compute, formula="max(10fg)",
+     target="$g_wg"
+eof
 #
 #    #10m eastward wind gust
 #    g_wge=$WDIR/260646_${origin}_${type}_${levtype}_${date}.grib2
@@ -133,7 +134,7 @@ eof
     gfile=$WDIR/${origin}_${type}_${levtype}_${date}.grib2
     base=$(basename $gfile)
     mfile=$WDIR/daily_minmax_${base}
-    cat $g_tmin $g_tmax  > $mfile
+    cat $g_tmin $g_tmax $g_wg  > $mfile
   chmod 755 $mfile
 
 done
