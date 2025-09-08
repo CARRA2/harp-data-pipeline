@@ -260,6 +260,7 @@ def create_slurm_script(script_list, output_slurm_file="run_mars_jobs_from_fac2.
 def main():
     period = sys.argv[1]
     tmp_path_fetch = sys.argv[2]
+    selected_config = sys.argv[3]
     start_date, end_date = get_dates(period)
 
     #tmp_path_fetch = "/ec/res4/scratch/nhd/mars-pull/carra2/fetch_to_archive"
@@ -277,7 +278,7 @@ def main():
     #for test
     #created_files = process_mars_statements(start_date, end_date, tmp_path_fetch,"mars_config_test.yaml")
 
-    created_files = process_mars_statements(start_date, end_date, tmp_path_fetch)
+    created_files = process_mars_statements(start_date, end_date, tmp_path_fetch,selected_config)
 
     # Print created files
     print("\nCreated files:")

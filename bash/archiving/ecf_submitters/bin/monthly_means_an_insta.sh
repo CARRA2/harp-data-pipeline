@@ -177,13 +177,13 @@ PARAMS=${par_dic[$levtype]}
 do_monthly_means
 done
 
-
 #merge all monthly means in one file. Merge all daily means on one file per day
 for levtype in hl ml pl; do
 echo "Doing merging of monthly means for all parameters of leveltype $levtype"
 PARAMS=${par_dic[$levtype]}
 merge_files
 done
+
 
 # for monthly means of sfc type use the function below
 levtype="sfc"

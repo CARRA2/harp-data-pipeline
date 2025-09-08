@@ -9,6 +9,7 @@ export ECFPROJ_STREAMS
 
 
 export MEANS_SCR
+export MEANS_FETCH
 
 # Load modules
 #

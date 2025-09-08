@@ -83,7 +83,8 @@ def create_directory_extra(type_val,stream, levtype, extra, tmp_path_fetch):
 
 def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="mars_config.yaml"):
     """Process MARS statements for given date range."""
-    mm_params = ['201','202']
+    mm_params = ['201','202','228029']
+    fc_params = ['260648'] # the only one instantaneous and in fc fields. FOG
     # Load configurations from YAML file
     retrieval_configs = load_configs(config_file)
 
@@ -100,8 +101,10 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
         #    output_dir = create_directory( config["type"], config["stream"], config["levtype"],tmp_path_fetch)
 
         # Split parameters
-        params = config["param"].replace("\n", "").replace(" ", "").split("/")
-
+        if "/" in str(config["param"]):
+            params = config["param"].replace("\n", "").replace(" ", "").split("/")
+        else:
+            params = [str(config["param"])]
         # Create a separate file for each parameter
         for param in params:
             # Create a copy of the config for this parameter
@@ -126,10 +129,14 @@ def process_mars_statements(start_date, end_date, tmp_path_fetch, config_file="m
                 output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"minmax",tmp_path_fetch)
             elif config["type"] == "fc" and config["stream"] == "moda" and param in mm_params:
                 output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"minmax",tmp_path_fetch)
-            elif config["type"] == "fc" and config["stream"] == "dame" and param not in mm_params:
+            elif config["type"] == "fc" and config["stream"] == "dame" and param not in mm_params and param not in fc_params:
                 output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"sums",tmp_path_fetch)
-            elif config["type"] == "fc" and config["stream"] == "moda" and param not in mm_params:
+            elif config["type"] == "fc" and config["stream"] == "moda" and param not in mm_params and param not in fc_params:
                 output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"sums",tmp_path_fetch)
+            elif config["type"] == "fc" and config["stream"] == "dame" and param in fc_params:
+                output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"ins",tmp_path_fetch)
+            elif config["type"] == "fc" and config["stream"] == "moda" and param in fc_params:
+                output_dir = create_directory_extra( config["type"], config["stream"], config["levtype"],"ins",tmp_path_fetch)
             else:
                 output_dir = create_directory( config["type"], config["stream"], config["levtype"],tmp_path_fetch)
                 #print("standard output path for this case")
@@ -159,6 +166,8 @@ def main():
     # Example usage
     period = sys.argv[1]
     tmp_path_fetch = sys.argv[2]
+    selected_config = sys.argv[3]
+    
     start_date, end_date = get_dates(period)
     print(f"Doing {period}")
     if not os.path.isdir(os.path.join(tmp_path_fetch,period)):
@@ -168,7 +177,7 @@ def main():
         os.makedirs(os.path.join(tmp_path_fetch,"scr"))
 
     print("Processing MARS statements...")
-    created_files = process_mars_statements(start_date, end_date, tmp_path_fetch)
+    created_files = process_mars_statements(start_date, end_date, tmp_path_fetch,selected_config)
 
     #print("\nCreated files and directories:")
     # Print created directories

@@ -28,6 +28,7 @@ if [[ -z $1 ]]; then
 else
   period=$1
   origin=$2
+  param=$3
 fi
 
 YYYY=$(substring $period 1 4) #substring is parf ot the eclib tools
@@ -92,6 +93,8 @@ echo "Doing monthly means for accumulated $type $param"
 done #param
 }
 
+if [ -z $3 ]; then
+echo "Doing all parameters in $CARRA_PAR_FC_ACC"
 # Get the parameters
 # Set the Internal Field Separator to "/"
 IFS='/'
@@ -99,6 +102,10 @@ IFS='/'
 read -ra PARAMS <<< "$CARRA_PAR_FC_ACC"
 # Reset IFS to default (whitespace)
 unset IFS
+else
+PARAMS=($param)
+echo "Doing only $param"
+fi
 
 
 #calculate the monthly means on each separate in the correspoding paths under $MEANS_OUTPUT/$origin/$YYYY/$MM/SUMS

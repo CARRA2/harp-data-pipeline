@@ -27,6 +27,16 @@ grib_filter filter_var_${PERIOD} $FILE
 archive_param()
 {
 
+echo $PARAM
+if [[ $PARAM == 173 ]]; then
+echo "Special case for 173 (roughness)"
+LOCAL_PARAM=235244
+elif [[ $PARAM == 260649 ]]; then
+echo "Special case for 260649"
+LOCAL_PARAM=263006
+else
+LOCAL_PARAM=$PARAM
+fi
 mars   << EOF
     ARCHIVE,
     CLASS      = RR,
@@ -36,7 +46,7 @@ mars   << EOF
     EXPVER     = prod,
     LEVTYPE    = $LEVTYPE,
     LEVELIST  = $LEVELS,
-    PARAM      = $PARAM,
+    PARAM      = $LOCAL_PARAM,
     DATE       = $DATE,
     TIME       = 0000,
     STEP       = 0,

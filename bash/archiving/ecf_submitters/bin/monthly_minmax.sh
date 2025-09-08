@@ -125,7 +125,7 @@ grib_ls -p name,shortName,param $OUT
 calc_with_python()
 {
 ml conda
-conda activate py38
+conda activate glat #py38
 # calculate min or max per month using python
 # First combine all grib files for the month in one, then use
 # python to calculate monthly min or max
