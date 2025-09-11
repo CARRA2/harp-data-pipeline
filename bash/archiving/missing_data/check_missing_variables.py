@@ -4,7 +4,7 @@ Script to check for missing variables in MARS archive by comparing
 expected parameters from templates with actual available data.
 Can check for specific month/year and validate level counts for ml/pl/hl types.
 """
-
+import sys
 import os
 import subprocess
 import re
@@ -68,6 +68,7 @@ def create_custom_template(template_path, year, month, database=None):
     
     # Create temporary file
     temp_fd, temp_path = tempfile.mkstemp(suffix='.mars', text=True)
+    print(temp_path)
     
     try:
         with os.fdopen(temp_fd, 'w') as f:
@@ -79,7 +80,6 @@ def create_custom_template(template_path, year, month, database=None):
                         f.write(f"database={database},\n")
                     else:
                         f.write(line)
-        
         return temp_path
     except Exception as e:
         os.unlink(temp_path)
@@ -94,6 +94,9 @@ def run_mars_listing(template_path, year=None, month=None, database=None):
         # Create custom template if year/month or database specified
         if (year is not None and month is not None) or database is not None:
             temp_template = create_custom_template(template_path, year, month, database)
+            #with open(temp_template, 'r') as file:
+            #    content = file.read()
+            #    print(content)
             actual_template = temp_template
         
         result = subprocess.run(['mars', actual_template], 
