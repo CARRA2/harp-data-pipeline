@@ -1,0 +1,11 @@
+list,
+class=rr,
+database=marssc,
+date=19850901,
+expver=prod,
+levelist=10/20/30/50/70/100/150/200/250/300/400/500/600/700/750/800/825/850/875/900/925/950/1000,
+levtype=pl,
+origin=no-ar-pa,
+param=10/60/75/76/129/130/157/246/247/3014/3031/260028/260238/260257,
+stream=moda,
+type=an
