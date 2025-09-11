@@ -7,3 +7,7 @@ errors*log
 errors*txt
 filter_var*
 archive_*fac2*.sh
+missing*grib
+ecsbatch.log.*
+slurm*out
+slurm*err

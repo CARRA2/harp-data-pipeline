@@ -1,4 +1,5 @@
 #!/bin/bash
+source env.sh
 
 # MARS Data Availability Checker - Multi-Period
 # Checks data availability in both main database and scratch database (marssc)
@@ -54,7 +55,7 @@ date=$year-$formatted_month-01/to/$year-$formatted_month-$formatted_last_day,
 expver=prod,
 levtype=sfc,
 origin=no-ar-pa,
-param=31/34/78/79/134/151/165/166/167/172/207/235/3066/3073/3074/3075/174096/174098/228002/228141/228164/231063/260001/260038/260057/260107/260108/260242/260260/260650,
+param=$CARRA_PAR_AN_SFC,
 stream=dame,
 type=an$db_param"
 

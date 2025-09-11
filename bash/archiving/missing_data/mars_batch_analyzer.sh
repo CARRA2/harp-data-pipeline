@@ -1,11 +1,13 @@
 #!/bin/bash
+source env.sh
 
 # MARS Batch Output Analyzer
 # Analyzes "dirty" MARS output containing multiple list commands with headers and data
 # Handles output from running mars with availability_1991_1993_mars_commands.txt
 
 # Expected parameters (30 total based on mars_checker.sh)
-EXPECTED_PARAMS=(31 34 78 79 134 151 165 166 167 172 207 235 3066 3073 3074 3075 174096 174098 228002 228141 228164 231063 260001 260038 260057 260107 260108 260242 260260 260650)
+#EXPECTED_PARAMS=(31 34 78 79 134 151 165 166 167 172 207 235 3066 3073 3074 3075 174096 174098 228002 228141 228164 231063 260001 260038 260057 260107 260108 260242 260260 260650)
+EXPECTED_PARAMS=(${CARRA_PAR_AN_SFC//\// });
 
 # Function to get days in month
 get_days_in_month() {

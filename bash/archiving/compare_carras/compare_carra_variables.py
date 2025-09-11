@@ -91,8 +91,8 @@ def main():
     print("=== CARRA2 vs CARRA-TU Variable Comparison ===\n")
     
     # Default config file paths - can be overridden by command line args
-    carra2_config = "./bash/archiving/config/config_archive.sh"
-    carratu_config = None  # Will use fallback hardcoded values if not provided
+    carra2_config = "/perm/nhd/CARRA2/harp-data-pipeline/bash/archiving/config/config_archive.sh"
+    carratu_config = "/home/nhd/scripts/carra/carra_means/bashscripts/ecf_conf/bin/env.sh"  # None # Will use fallback hardcoded values if not provided
     
     # Check for command line arguments
     import sys
