@@ -11,3 +11,4 @@ missing*grib
 ecsbatch.log.*
 slurm*out
 slurm*err
+fetch_scripts*/

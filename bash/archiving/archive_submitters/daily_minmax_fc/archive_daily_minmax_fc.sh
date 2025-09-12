@@ -132,6 +132,7 @@ for DATE in $(seq -w $date_beg $date_end); do
       FILB=$(echo $FILT_FILE|sed -e "1s/.grib2/_new.grib2/")
       echo "Updating the headers in $FILT_FILE. Writing to $FILB"
       grib_filter -o $FILB $RULED $FILT_FILE
+      #echo "grib_filter -o $FILB $RULED $FILT_FILE"
       EXPECT=$(grib_count $FILB)
 
       # archive the parameter 
