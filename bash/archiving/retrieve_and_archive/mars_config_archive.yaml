@@ -1,0 +1,181 @@
+archival_configs:
+# daily data of instantaneous type and from an files
+- data_path: an_dame_sfc
+  class: rr
+  type: an
+  levtype: sfc
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+
+- data_path: an_dame_hl
+  class: rr
+  type: an
+  levtype: hl
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+
+- data_path: an_dame_pl
+  class: rr
+  type: an
+  levtype: pl
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+
+- data_path: an_dame_ml
+  class: rr
+  type: an
+  levtype: ml
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+#additional to setup in script
+# levelist
+# levtype
+# param
+# date
+# source
+# expect
+
+
+#minmax daily
+- data_path: fc_dame_sfc_minmax
+  class: rr
+  type: fc
+  levtype: sfc
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 3
+  database: marser
+#additional to setup in script
+# levelist
+# levtype
+# param
+# date
+# source
+# expect
+
+# daily sums
+- data_path: fc_dame_sfc_sums
+  class: rr
+  type: fc
+  levtype: sfc
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 1200
+  step: 18
+  database: marser
+#additional to setup in script
+# levelist
+# levtype
+# param
+# date
+# source
+# expect
+
+# monthly means an
+- data_path: an_moda_sfc
+  class: rr
+  type: an
+  levtype: sfc
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+
+- data_path: an_moda_hl
+  class: rr
+  type: an
+  levtype: hl
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+
+- data_path: an_moda_ml
+  class: rr
+  type: an
+  levtype: ml
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+
+- data_path: an_moda_pl
+  class: rr
+  type: an
+  levtype: pl
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 0
+  database: marser
+#additional to setup in script
+#additional to setup in script
+# levelist
+# levtype
+# param
+# date
+# source
+# expect
+
+# monthly means of daily sums
+- data_path: fc_moda_sfc_sums
+  class: rr
+  type: fc
+  levtype: sfc
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 1200
+  database: marser
+#additional to setup in script
+# levelist
+# levtype
+# param
+# date
+# source
+# expect
+
+- data_path: fc_moda_sfc_minmax
+  class: rr
+  type: fc
+  levtype: sfc
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 0000
+  step: 3
+  database: marser
+#additional to setup in script
+# levelist
+# levtype
+# param
+# date
+# source
+# expect
+#
