@@ -1,0 +1,67 @@
+archival_configs:
+- data_path: fc_dame_sfc_sums
+  class: rr
+  type: fc
+  levtype: sfc
+  stream: dame
+  origin: no-ar-pa
+  expver: prod
+  time: 1200
+  step: 18
+  database: marser
+
+#- data_path: fc_dame_sfc_ins
+#  class: rr
+#  type: fc
+#  levtype: sfc
+#  stream: dame
+#  origin: no-ar-pa
+#  expver: prod
+#  time: 2100
+#  step: 3
+#  database: marser
+
+#- data_path: an_dame_hl
+#  class: rr
+#  type: an
+#  levtype: hl
+#  stream: dame
+#  origin: no-ar-pa
+#  expver: prod
+#  time: 0000
+#  step: 0
+#  database: marser
+
+
+#monthly means of daily sums
+- data_path: fc_moda_sfc_sums
+  class: rr
+  type: fc
+  levtype: sfc
+  stream: moda
+  origin: no-ar-pa
+  expver: prod
+  time: 1200
+  database: marser
+
+#- data_path: fc_moda_sfc_ins
+#  class: rr
+#  type: fc
+#  levtype: sfc
+#  stream: dame
+#  origin: no-ar-pa
+#  expver: prod
+#  time: 2100
+#  step: 3
+#  database: marser
+#
+#- data_path: an_moda_hl
+#  class: rr
+#  type: an
+#  levtype: hl
+#  stream: moda
+#  origin: no-ar-pa
+#  expver: prod
+#  time: 0000
+#  step: 0
+#  database: marser

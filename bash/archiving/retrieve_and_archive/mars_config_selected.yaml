@@ -1,0 +1,65 @@
+retrieval_configs:
+- class: rr
+  database: marssc
+  expver: prod
+  levtype: sfc
+  origin: no-ar-pa
+  #param: 47/146/169/175/176/177/178/179/201/202/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645
+  param: 47/146/169/175/176/177/178/179/201/202/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645/231010
+  stream: dame
+  type: fc
+
+# daily data
+#- class: rr
+#  database: marssc
+#  expver: prod
+#  levtype: sfc
+#  origin: no-ar-pa
+#  param: 260648
+#  #param: 47/146/169/175/176/177/178/179/201/202/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645/231010/260648
+#  stream: dame
+#  type: fc
+
+#- class: rr
+#  database: marssc
+#  expver: prod
+#  levtype: hl
+#  levelist: 15/30/50/75/100/150/200/250/300/400/500/750/1000/1250/1500/2000/2500/3000
+#  origin: no-ar-pa
+#  param: 10/54/130/157/246/247/3031
+#  stream: dame
+#  type: an
+
+
+ #monthly data
+#- class: rr
+#  database: marssc
+#  expver: prod
+#  levtype: sfc
+#  origin: no-ar-pa
+#  param: 260648
+##  param: 47/146/169/175/176/177/178/179/201/202/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645/231010/260648
+#  stream: moda
+#  type: fc
+
+#- class: rr
+#  database: marssc
+#  expver: prod
+#  levtype: hl
+#  levelist: 15/30/50/75/100/150/200/250/300/400/500/750/1000/1250/1500/2000/2500/3000
+#  origin: no-ar-pa
+#  param: 10/54/130/157/246/247/3031
+#  stream: moda
+#  type: an
+
+
+- class: rr
+  database: marssc
+  expver: prod
+  levtype: sfc
+  origin: no-ar-pa
+  #param: 47/146/169/175/176/177/178/179/201/202/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645
+  param: 47/146/169/175/176/177/178/179/201/202/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645/231010
+  stream: moda
+  type: fc
+
