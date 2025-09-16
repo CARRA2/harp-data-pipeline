@@ -223,8 +223,32 @@ def check_missing_variables(template_path, year=None, month=None, database=None,
     
     if not available_by_date:
         if verbose:
-            print("No data found in MARS output")
-        return None
+            print("No data found in MARS output. All expected parameters are considered missing.")
+        
+        missing_params = expected_params
+        
+        if verbose:
+            if missing_params:
+                print(f"\nMISSING PARAMETERS ({len(missing_params)}):")
+                for param in sorted(missing_params):
+                    print(f"  - {param}")
+            else:
+                print("\nNo expected parameters were defined in the template.")
+
+        return {
+            'template_name': template_name,
+            'levtype': levtype,
+            'type': type_val,
+            'stream': stream,
+            'expected_levels': expected_levels,
+            'date_range': "No data",
+            'total_dates': 0,
+            'missing_params': sorted(missing_params),
+            'extra_params': [],
+            'params_missing_dates': {},
+            'level_issues': {},
+            'database': database or 'default'
+        }
     
     # Check for missing parameters
     all_dates = sorted(available_by_date.keys())
