@@ -88,7 +88,8 @@ export CARRA_PAR_AN_SFC_ARXIV="31/34/78/79/134/151/165/166/167/235244/207/235/30
 export CARRA_PAR_FC_SFC_MM_ARXIV="201/202" #CARRA2. only archiving these two since gust has problem with the headers
 
 # Set the first path of destination directory
-export MEANS_OUTPUT=$SCRATCH/mars-pull/carra2
+#export MEANS_OUTPUT=$SCRATCH/mars-pull/carra2
+export MEANS_OUTPUT=/ec/res4/scratch/nhd/mars-pull/carra2
 
 
 #the binary for grib_mean

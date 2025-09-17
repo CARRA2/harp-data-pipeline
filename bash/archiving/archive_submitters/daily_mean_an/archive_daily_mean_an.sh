@@ -31,7 +31,8 @@ source ./load_eccodes.sh
 #
 #}
 
-DBASE=marsscratch
+#DBASE=marsscratch
+DBASE=marser
 
 extract_param()
 {
