@@ -90,7 +90,9 @@ date_end=${PERIOD}${MAXDAY}
 ENDYEAR=${date_beg:0:4}
 ENDMONTH=${date_beg:4:2}
 PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH
-WRK=$PATH_DATA/archive_minmax
+#WRK=$PATH_DATA/archive_minmax
+WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH/archive_minmax
+
 [ ! -d $WRK ] && mkdir -p $WRK
 echo "Updating headers and archiving data of daily minmax/insta for $PERIOD of $ORIGIN in $PATH_DATA"
 

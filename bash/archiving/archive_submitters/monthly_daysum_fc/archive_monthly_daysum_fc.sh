@@ -109,6 +109,8 @@ IFS='/'
 read -ra PARAMS <<< "$CARRA_PAR_FC_ACC"
 unset IFS #Otherwise this will fuck up my loops below
 
+WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH
+[ ! -d $WRK ] && mkdir -p $WRK
 
 for PARAM in ${PARAMS[@]}; do
 
@@ -116,6 +118,8 @@ FILE=$PATH_DATA/monthly_mean_accum_${ORIGIN}_fc_sfc_${PERIOD}_${PARAM}.grib2
 
 
 FILB=$(echo $FILE|sed -e "1s/.grib2/_new.grib2/")
+FILE_LOCAL=$WRK/$(basename $FILB)
+FILB=$FILE_LOCAL
 # change headers
 grib_filter -o $FILB $RULED $FILE
 echo "Updating headers and archiving of monthly of dailysums for $PERIOD of $ORIGIN in $FILB"

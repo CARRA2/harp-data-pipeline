@@ -126,7 +126,7 @@ RULED=${RULES}_${PERIOD}_${ORIGIN}
 ENDYEAR=${date_beg:0:4}
 ENDMONTH=${date_beg:4:2}
 PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH
-WRK=$PATH_DATA/archive_daily_an
+WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH/archive_daily_an
 [ ! -d $WRK ] && mkdir -p $WRK
 
 echo "Processing an/insta for $PERIOD of $ORIGIN in $PATH_DATA"

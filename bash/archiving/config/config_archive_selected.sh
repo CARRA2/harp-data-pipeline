@@ -75,7 +75,8 @@ export CARRA_PAR_FC_SFC_IN="260648" #CARRA2
 #export CARRA_PAR_FC_ACC="228228/235015/260645/174008/260430/260259/235072/146/147/235019/235071/47/260264/176/169/210/177/175/211/178/179/235017/235018" # CARRA-TU
 #Note: the CARRA2 list was ammended after a doing a list of parameters above. The following are not available: 147, 174008
 #export CARRA_PAR_FC_ACC="47/146/169/175/176/177/178/179/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645" # CARRA2 TEMPORARY on 20250304
-export CARRA_PAR_FC_ACC="47/146/169/175/176/177/178/179/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645/231010" # CARRA2
+#export CARRA_PAR_FC_ACC="47/146/169/175/176/177/178/179/210/211/228228/235015/235017/235018/235019/235071/235072/260259/260264/260430/260645/231010" # CARRA2
+export CARRA_PAR_FC_ACC="231010" # CARRA2
 
 # For archival to mars only
 # the list of certain groups are changed before archiving to marser
@@ -88,8 +89,8 @@ export CARRA_PAR_AN_SFC_ARXIV="31/34/78/79/134/151/165/166/167/235244/207/235/30
 export CARRA_PAR_FC_SFC_MM_ARXIV="201/202" #CARRA2. only archiving these two since gust has problem with the headers
 
 # Set the first path of destination directory
-#export MEANS_OUTPUT=$SCRATCH/mars-pull/carra2
 export MEANS_OUTPUT=/ec/res4/scratch/nhd/mars-pull/carra2
+export MEANS_OUTPUT_FAC2=$SCRATCH/mars-pull/carra2
 
 
 #the binary for grib_mean

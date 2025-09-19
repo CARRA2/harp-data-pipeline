@@ -111,7 +111,8 @@ ENDHOUR=21
 ((LTR=NDAYS*24-3))   # range=end-start
 
 PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH
-WRK=$PATH_DATA/archive_monthly
+WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH/archive_monthly
+
 [ ! -d $WRK ] && mkdir -p $WRK
 
 echo "Processing of monthly means of type an for $PERIOD of $ORIGIN in $PATH_DATA"

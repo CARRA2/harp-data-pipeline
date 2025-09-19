@@ -10,7 +10,7 @@ source ./load_eccodes.sh
 ## script for amending CARRA2 GRIB headers for daily sum, forecasts
 #set -evx
 
-DBASE=marsscratch
+DBASE=marser
 
 extract_param()
 {
@@ -91,7 +91,8 @@ date_end=${PERIOD}${MAXDAY}
 ENDYEAR=${date_beg:0:4}
 ENDMONTH=${date_beg:4:2}
 PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH/SUMS
-WRK=$PATH_DATA/archive_sums
+WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH/archive_sums
+
 [ ! -d $WRK ] && mkdir -p $WRK
 
 echo "Updating headers and archiving data of daily fc/sum for $PERIOD of $ORIGIN in $PATH_DATA"
@@ -145,6 +146,8 @@ for DATE in $(seq -w $date_beg $date_end); do
     #  echo "Updating the headers in $FILT_FILE. Writing to $FILB"
     #  grib_filter -o $FILB $RULED $FILT_FILE
     FILB=$(echo $FILE | sed -e "1s/.grib2/_new.grib2/")
+    FILE_LOCAL=$WRK/$(basename $FILB)
+    FILB=$FILE_LOCAL
       echo "Updating the headers in $FILE. Writing to $FILB"
      grib_filter -o $FILB $RULED $FILE
       EXPECT=$(grib_count $FILB)

@@ -79,9 +79,14 @@ sed -i "s/ENDDAY/$ENDDAY/" $RULED
 sed -i "s/ENDHOUR/$ENDHOUR/" $RULED
 sed -i "s/LTRM/$LTRM/" $RULED
 
+WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH
+[ ! -d $WRK ] && mkdir -p $WRK
+
 # change headers
 FILE=$PATH_DATA/monthly_minmax_${ORIGIN}_fc_sfc_${PERIOD}.grib2
 FILB=$(echo $FILE|sed -e "1s/.grib2/_new.grib2/")
+FILE_LOCAL=$WRK/$(basename $FILB)
+FILB=$FILE_LOCAL
 echo "Changing headers of monthly minmax of type fc for $PERIOD of $ORIGIN in $FILE"
 grib_filter -o $FILB $RULED $FILE
 
