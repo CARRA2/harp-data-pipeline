@@ -2,7 +2,7 @@ import datetime
 import os
 os.environ['NBATCH'] = '4'
 os.environ["ECF_PORT"] = "3141"
-os.environ["ECF_HOST"] = "ecflow-gen-nhd-001"
+os.environ["ECF_HOST"] = "ecflow-gen-fac2-001"
 
 
 def parse_timestamp(timestamp_str):

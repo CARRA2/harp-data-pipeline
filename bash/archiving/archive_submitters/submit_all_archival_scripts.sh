@@ -1,4 +1,4 @@
-PERIOD=200902 
+PERIOD=202401
 ORIGIN=no-ar-pa
 
 cd daily_mean_an
