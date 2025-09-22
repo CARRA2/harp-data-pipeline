@@ -102,3 +102,5 @@ done #date
 
 #remove the temporary files
 rm -f $WDIR/${origin}_${type}_${levtype}_*.grib2
+echo "Changing the permissions"
+chmod 755 -R $MEANS_OUTPUT/$origin/$YYYY/$MM
