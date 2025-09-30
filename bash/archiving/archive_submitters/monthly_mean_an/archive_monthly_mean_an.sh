@@ -10,7 +10,7 @@ source ./load_eccodes.sh
 #SBATCH --time=48:00:00
 #SBATCH --account=$SBU_CARRA_MEANS
 
-DBASE=marsscratch
+DBASE=marser
 
 extract_param()
 {
@@ -110,7 +110,8 @@ ENDDAY=$NDAYS
 ENDHOUR=21
 ((LTR=NDAYS*24-3))   # range=end-start
 
-PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH
+#PATH_DATA=$MEANS_OUTPUT/$ORIGIN/$ENDYEAR/$ENDMONTH
+PATH_DATA=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH
 WRK=$MEANS_OUTPUT_FAC2/$ORIGIN/$ENDYEAR/$ENDMONTH/archive_monthly
 
 [ ! -d $WRK ] && mkdir -p $WRK
