@@ -2,7 +2,7 @@
 # harp sqlite processing system configuration for ECMWF Atos
 #
 
-export ECFPROJ_LIB="/perm/nhd/CARRA2/harp-data-pipeline"
+export ECFPROJ_LIB="/perm/fac2/MEANS_production_scripts/harp-data-pipeline"
 
 # harp-verif directory
 export HARP_DIR="/perm/nhd/R/latest_harp_verif/harp-verif"
