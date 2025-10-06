@@ -130,8 +130,11 @@ def create_daily_monthly_means(stream:str):
     for ltype in ["hl","pl","sfc","ml"]:
         t1 = run.add_task(f"daily_mean_an_insta_{ltype}")
 
-    #then do fc files
+    #then do fc files minmax
     t1 = run.add_task(f"daily_minmax_fc_sfc")
+
+    #then do fc files 
+    t1 = run.add_task(f"daily_mean_fc_sfc")
     #t1 = run.add_task(f"daily_sum_fc_sfc")
     for i in range(0,NBATCH):
       t1 = run.add_task(f"daily_sum_fc_sfc_batch{i+1}")
@@ -159,6 +162,9 @@ def create_daily_monthly_means(stream:str):
 
     t1 = run.add_task("monthly_minmax")
     t1.add_trigger( f"daily_minmax_fc_sfc == complete" )
+
+    t1 = run.add_task("monthly_mean_fc_sfc")
+    t1.add_trigger( f"daily_mean_fc_sfc == complete" )
 
     t1 = run.add_task(f"archive_to_marsscratch")
     long_rule = "((monthly_means_of_daily_sums == complete) and (monthly_minmax == complete) and (monthly_means_an_insta == complete))"
