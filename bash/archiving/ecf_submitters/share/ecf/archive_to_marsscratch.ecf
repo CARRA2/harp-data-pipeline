@@ -37,6 +37,10 @@ cd daily_sum_fc
 ./archive_daily_sums_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
 cd ..
 
+cd daily_mean_fc
+./archive_daily_mean_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
 cd monthly_mean_an
 ./archive_monthly_mean_an.sh $CARRA_PERIOD $ORIGIN || exit 1
 cd ..
@@ -47,6 +51,10 @@ cd ..
 
 cd monthly_daysum_fc/
 ./archive_monthly_daysum_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
+cd ..
+
+cd monthly_mean_fc
+./archive_monthly_mean_fc.sh $CARRA_PERIOD $ORIGIN || exit 1
 cd ..
 
 cd $CWD
