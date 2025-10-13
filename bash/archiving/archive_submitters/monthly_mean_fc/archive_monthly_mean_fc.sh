@@ -7,7 +7,7 @@ source ./load_eccodes.sh
 #SBATCH --time=48:00:00
 #SBATCH --account=$SBU_CARRA_MEANS
 
-DBASE=marsscratch
+DBASE=marser
 ml eclib
 
 extract_param()
