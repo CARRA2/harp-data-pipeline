@@ -105,7 +105,7 @@ read -ra PARAMS <<< "$CARRA_PAR_FC_ACC"
 unset IFS #Otherwise this will fuck up my loops below
 
 RULES=grb_head_chng_daily_sum_fc_rules
-RULED=${RULES}_temp
+RULED=${RULES}_${PERIOD}_temp
 
 ITIME=00
 for DATE in $(seq -w $date_beg $date_end); do

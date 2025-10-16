@@ -21,7 +21,7 @@ DESCRIPTION:
 
 ORIGIN=%ECFPROJ_STREAM%
 MEANS_SCR=%MEANS_SCR%
-${MEANS_SCR}/monthly_means_fc_sfc.sh $CARRA_PERIOD $ORIGIN || exit 1
+${MEANS_SCR}/monthly_means_fc_sfc.sh $CARRA_PERIOD $ORIGIN fc sfc || exit 1
 %include <tail.h>
 
 %comment

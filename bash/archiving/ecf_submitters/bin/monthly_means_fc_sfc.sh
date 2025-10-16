@@ -110,6 +110,7 @@ echo "Doing monthly means for $type instantaneous parameters of type ${levtype}"
  input_files=()
  for date in $(seq -w $date_beg $date_end); do
    IN=$WDIR/daily_mean_${origin}_${type}_${levtype}_${date}.grib2
+   echo $IN
    extract_selected_fc #extracts only selected variables (excluding ptype)
    if [ ! -f $IN ]; then
      echo "ERROR: data stream incomplete! Date $date is missing: $IN"
@@ -145,6 +146,8 @@ echo "Doing monthly means for accumulated $type parameters of type $levtype"
 
 
 # fc files (only one variable being done now, since the rest are min or max over the month)
-if [[ $levtype == sfc ]] && [[ $type == fc ]]; then
-  do_monthly_fc_insta
-fi
+#if [[ $levtype == sfc ]] && [[ $type == fc ]]; then
+levtype=sfc
+type=fc
+do_monthly_fc_insta
+#fi
