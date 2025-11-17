@@ -23,24 +23,39 @@ ECF_PORT = os.environ["ECF_PORT"]
 
 # Force replace suite
 FORCE = os.environ["FORCE"]
-# Archive
-#ARCHIVE = os.environ["ARCHIVE"]
 
 # Start YMD/HH
-# This will setup the first date of processing. If it is not set it will not work!
 CARRA_PERIOD = os.environ["CARRA_PERIOD"]
 MEANS_SCR = os.environ["MEANS_SCR"]
 
 CARRA_PAR_FC_ACC = os.environ["CARRA_PAR_FC_ACC"]
 
 # List of streams to process
-get_streams = os.getenv('ECFPROJ_STREAMS') #.split(',')
+get_streams = os.getenv('ECFPROJ_STREAMS')
 if "," in get_streams:
     ecfproj_streams = get_streams.split(",")
 else:
     ecfproj_streams = [get_streams]
 
 print(f"Doing {ecfproj_streams}")
+
+# Get selected processing types from environment
+SELECTED_DAILY_SUMS = os.getenv('SELECTED_DAILY_SUMS', 'false').lower() == 'true'
+SELECTED_MONTHLY_SUMS = os.getenv('SELECTED_MONTHLY_SUMS', 'false').lower() == 'true'
+SELECTED_DAILY_MEANS_AN = os.getenv('SELECTED_DAILY_MEANS_AN', 'false').lower() == 'true'
+SELECTED_DAILY_MEANS_FC = os.getenv('SELECTED_DAILY_MEANS_FC', 'false').lower() == 'true'
+SELECTED_MONTHLY_MEANS_AN = os.getenv('SELECTED_MONTHLY_MEANS_AN', 'false').lower() == 'true'
+SELECTED_DAILY_MINMAX = os.getenv('SELECTED_DAILY_MINMAX', 'false').lower() == 'true'
+SELECTED_MONTHLY_MINMAX = os.getenv('SELECTED_MONTHLY_MINMAX', 'false').lower() == 'true'
+
+print(f"Selected processing types:")
+print(f"  Daily sums: {SELECTED_DAILY_SUMS}")
+print(f"  Monthly sums: {SELECTED_MONTHLY_SUMS}")
+print(f"  Daily means AN: {SELECTED_DAILY_MEANS_AN}")
+print(f"  Daily means FC: {SELECTED_DAILY_MEANS_FC}")
+print(f"  Monthly means AN: {SELECTED_MONTHLY_MEANS_AN}")
+print(f"  Daily minmax: {SELECTED_DAILY_MINMAX}")
+print(f"  Monthly minmax: {SELECTED_MONTHLY_MINMAX}")
 
 defs = ec.Defs()
 suite = defs.add_suite(EXP)
@@ -62,9 +77,8 @@ suite.add_variable("ECF_JOB_CMD",       ECF_JOB_CMD)
 suite.add_variable("ECF_KILL_CMD",      ECF_KILL_CMD)
 suite.add_variable("ECF_STATUS_CMD",    ECF_STATUS_CMD)
 suite.add_variable("QUEUE",             'nf')
-suite.add_variable("SBU_CARRA_MEANS",             'c3srrp') # THIS is CARRA2!
+suite.add_variable("SBU_CARRA_MEANS",             'c3srrp')
 suite.add_variable("SUB_H",             "sbatch." + ECFPROJ_CONFIG + ".h")
-# Added
 suite.add_variable("TASK",           "")
 suite.add_variable("CARRA_PERIOD",CARRA_PERIOD)
 suite.add_variable("MEANS_SCR", MEANS_SCR)
@@ -73,134 +87,113 @@ suite.add_variable("MEANS_SCR", MEANS_SCR)
 suite.add_limit("par", 10)
 
 SPLIT_SUM_VARS = CARRA_PAR_FC_ACC.split("/")
-# add variables for the sums
-#Split sums in n batches to speed up processing
 NBATCH = int(os.environ['NBATCH'])
 
-#Note that this implies there should be 1 to NBATCH+1 ecf templates for the corresponding
-#scripts to be used.
-#Consider using a function to create them below? Or offline in main submission script
-
-#divide the sums into nbatches
-split_size = len(SPLIT_SUM_VARS)//NBATCH
-rem_split = len(SPLIT_SUM_VARS) % NBATCH
-start_chunk = 0
-for i in range(0,NBATCH):
-    end_chunk = start_chunk + split_size + (1 if i < rem_split else 0)
-    chunks_sum = SPLIT_SUM_VARS[start_chunk:end_chunk]
-    start_chunk = end_chunk
-    print(f"Adding {chunks_sum} to CARRA_PAR_FC_ACC_batch{i+1}")
-    suite.add_variable(f"CARRA_PAR_FC_ACC_batch{i+1}"," ".join(chunks_sum))
-
-#suite.add_variable("CARRA_PAR_FC_ACC_batch1"," ".join(SPLIT_SUM_VARS[0:5]))
-#suite.add_variable("CARRA_PAR_FC_ACC_batch2"," ".join(SPLIT_SUM_VARS[5:11]))
-#suite.add_variable("CARRA_PAR_FC_ACC_batch3", " ".join(SPLIT_SUM_VARS[11:16]))
-#suite.add_variable("CARRA_PAR_FC_ACC_batch4"," ".join(SPLIT_SUM_VARS[16:]))
+# Only create batch variables if daily sums are selected
+if SELECTED_DAILY_SUMS:
+    split_size = len(SPLIT_SUM_VARS)//NBATCH
+    rem_split = len(SPLIT_SUM_VARS) % NBATCH
+    start_chunk = 0
+    for i in range(0,NBATCH):
+        end_chunk = start_chunk + split_size + (1 if i < rem_split else 0)
+        chunks_sum = SPLIT_SUM_VARS[start_chunk:end_chunk]
+        start_chunk = end_chunk
+        print(f"Adding {chunks_sum} to CARRA_PAR_FC_ACC_batch{i+1}")
+        suite.add_variable(f"CARRA_PAR_FC_ACC_batch{i+1}"," ".join(chunks_sum))
 
 # ecflow does not like dashes, so renaming streams here
 names_dict={"no-ar-cw":"west","no-ar-ce":"east","no-ar-pa":"pan_arctic"}
 
-# Create the vobs conversion family
-def create_daily_means(stream:str):
-    this_stream = names_dict[stream]
-
-    run = ec.Family(f"daily_{this_stream}")
-    run.add_variable("ECFPROJ_STREAM", stream)
-    #first do for an files
-    for ltype in ["hl","pl","sfc","sol","ml"]:
-        t1 = run.add_task(f"daily_mean_an_{ltype}")#f"daily_means_{this_stream}")
-    #then do fc files
-    t1 = run.add_task(f"daily_mean_fc_sfc")
-    t1 = run.add_task(f"daily_sum_fc_sfc")
-
-    return run
-
-
-def create_daily_monthly_means(stream:str):
+def create_selective_daily_monthly_means(stream:str):
     """
-    Monthly means run.
-    Triggered only if all files are there for given level type
-    Following https://confluence.ecmwf.int/display/ECFLOW/Adding+Triggers+and+Complete
+    Create only the selected processing tasks based on user selection
     """
     this_stream = names_dict[stream]
     run = ec.Family(f"{this_stream}")
     run.add_variable("ECFPROJ_STREAM", stream)
 
-    #first do for an files
-    for ltype in ["hl","pl","sfc","ml"]:
-        t1 = run.add_task(f"daily_mean_an_insta_{ltype}")
+    # Track which tasks are created for dependency management
+    created_daily_an_tasks = []
+    created_daily_sum_tasks = []
+    
+    # Daily means for analysis files (if selected)
+    if SELECTED_DAILY_MEANS_AN:
+        for ltype in ["hl","pl","sfc","ml"]:
+            t1 = run.add_task(f"daily_mean_an_insta_{ltype}")
+            created_daily_an_tasks.append(ltype)
 
-    #then do fc files
-    t1 = run.add_task(f"daily_minmax_fc_sfc")
-    #t1 = run.add_task(f"daily_sum_fc_sfc")
-    for i in range(0,NBATCH):
-      t1 = run.add_task(f"daily_sum_fc_sfc_batch{i+1}")
-    #t1 = run.add_task(f"daily_sum_fc_sfc_batch2")
-    #t1 = run.add_task(f"daily_sum_fc_sfc_batch3")
-    #t1 = run.add_task(f"daily_sum_fc_sfc_batch4")
-    #for param in CARRA_PAR_FC_ACC.split("/"):
-    #    t1 = run.add_task(f"daily_sum_fc_sfc_{param}")
+    # Daily means for forecast files (if selected)
+    if SELECTED_DAILY_MEANS_FC:
+        t1 = run.add_task(f"daily_mean_fc_sfc")
 
-    t1 = run.add_task(f"monthly_means_an_insta")
-    mm=[]
-    for ltype in ["hl","pl","sfc","ml"]:
-        mm.append(f"(daily_mean_an_insta_{ltype} == complete)")
-    long_rule=f"({mm[0]} and {mm[1]} and {mm[2]} and {mm[3]})"
-    t1.add_trigger(long_rule)
+    # Daily min/max for forecast files (if selected)
+    if SELECTED_DAILY_MINMAX:
+        t1 = run.add_task(f"daily_minmax_fc_sfc")
 
-    #then do sums
-    t1 = run.add_task("monthly_means_of_daily_sums")
-    mm=[]
-    #for bat in range(1,5):
-    for bat in range(0,NBATCH):
-        mm.append(f"(daily_sum_fc_sfc_batch{bat+1} == complete)")
-    long_rule="("+" and ".join(mm)+")"
-    t1.add_trigger(long_rule)
+    # Daily sums (if selected)
+    if SELECTED_DAILY_SUMS:
+        for i in range(0,NBATCH):
+            t1 = run.add_task(f"daily_sum_fc_sfc_batch{i+1}")
+            created_daily_sum_tasks.append(i+1)
 
-    t1 = run.add_task("monthly_minmax")
-    t1.add_trigger( f"daily_minmax_fc_sfc == complete" )
+    # Monthly means of analysis (if selected and daily means AN were created)
+    if SELECTED_MONTHLY_MEANS_AN and created_daily_an_tasks:
+        t1 = run.add_task(f"monthly_means_an_insta")
+        # Only add trigger if we have the required daily tasks
+        if len(created_daily_an_tasks) > 0:
+            mm = []
+            for ltype in created_daily_an_tasks:
+                mm.append(f"(daily_mean_an_insta_{ltype} == complete)")
+            if len(mm) > 1:
+                long_rule = "(" + " and ".join(mm) + ")"
+            else:
+                long_rule = mm[0]
+            t1.add_trigger(long_rule)
 
-    t1 = run.add_task(f"archive_to_marsscratch")
-    long_rule = "((monthly_means_of_daily_sums == complete) and (monthly_minmax == complete) and (monthly_means_an_insta == complete))"
-    t1.add_trigger(long_rule)
+    # Monthly means of daily sums (if selected and daily sums were created)
+    if SELECTED_MONTHLY_SUMS and created_daily_sum_tasks:
+        t1 = run.add_task("monthly_means_of_daily_sums")
+        # Only add trigger if we have the required daily sum tasks
+        if len(created_daily_sum_tasks) > 0:
+            mm = []
+            for bat in created_daily_sum_tasks:
+                mm.append(f"(daily_sum_fc_sfc_batch{bat} == complete)")
+            long_rule = "(" + " and ".join(mm) + ")"
+            t1.add_trigger(long_rule)
 
-    t1 = run.add_task(f"clean_scratch")
-    t1.add_trigger("(archive_to_marsscratch == complete)")
+    # Monthly min/max (if selected and daily minmax was created)
+    if SELECTED_MONTHLY_MINMAX and SELECTED_DAILY_MINMAX:
+        t1 = run.add_task("monthly_minmax")
+        t1.add_trigger(f"daily_minmax_fc_sfc == complete")
+
+    # Archive task (only if we have something to archive)
+    archive_conditions = []
+    if SELECTED_MONTHLY_SUMS and created_daily_sum_tasks:
+        archive_conditions.append("(monthly_means_of_daily_sums == complete)")
+    if SELECTED_MONTHLY_MINMAX and SELECTED_DAILY_MINMAX:
+        archive_conditions.append("(monthly_minmax == complete)")
+    if SELECTED_MONTHLY_MEANS_AN and created_daily_an_tasks:
+        archive_conditions.append("(monthly_means_an_insta == complete)")
+    
+    if archive_conditions:
+        t1 = run.add_task(f"archive_to_marsscratch")
+        if len(archive_conditions) > 1:
+            long_rule = "(" + " and ".join(archive_conditions) + ")"
+        else:
+            long_rule = archive_conditions[0]
+        t1.add_trigger(long_rule)
+
+        # Clean scratch (only if archive task exists)
+        t1 = run.add_task(f"clean_scratch")
+        t1.add_trigger("(archive_to_marsscratch == complete)")
 
     return run
-
-
-def create_report(stream:str):
-    """
-    Creates report for the whole processing
-    """
-    pass
-
-# Create the vfld conversion family
-def create_sqlite_vfld(run_hhmm):
-    run = ec.Family("run")
-    run.add_inlimit("par")
-    run.add_repeat(ec.RepeatDate("YMD",int(start_ymd), 20990101, 1))
-    #run.add_trigger("((run:YMD + %s) < :ECF_DATE) or ((run:YMD + %s) == :ECF_DATE and :TIME >= %s)" %(DELAY_VFLD,DELAY_VFLD,run_hhmm))
-    run.add_trigger(f"((run:YMD == :ECF_DATE) and (:TIME >= {run_hhmm}))") #%(DELAY_VFLD,DELAY_VFLD,run_hhmm))
-    t1 = run.add_task("vfld2sql")
-
-    return run
-
 
 # Create the families in the suite
 fs = suite.add_family(CARRA_PERIOD)
 for ecfproj_stream in ecfproj_streams:
-    #fs.add_variable("ECFPROJ_STREAM", ecfproj_stream)
-    print(f"Creating family for {ecfproj_stream}")
-    fs.add_family(create_daily_monthly_means(ecfproj_stream))
-
-    #original that works
-    #print(f"Creating family for {ecfproj_stream}")
-    #fs.add_family(create_daily_means(ecfproj_stream))
-
-    # to correct: reference to completed task from family below!
-    #fs.add_family(create_monthly_means(ecfproj_stream))
+    print(f"Creating selective family for {ecfproj_stream}")
+    fs.add_family(create_selective_daily_monthly_means(ecfproj_stream))
 
 if __name__=="__main__":
     # Define a client object with the target ecFlow server
@@ -209,6 +202,7 @@ if __name__=="__main__":
     # Save the definition to a .def file
     print("Saving definition to file '%s.def'"%EXP)
     defs.save_as_defs("%s.def"%EXP)
+    
     # If the force flag is set, load the suite regardless of whether an
     # experiment of the same name exists in the ecFlow server
     if FORCE == "True":
