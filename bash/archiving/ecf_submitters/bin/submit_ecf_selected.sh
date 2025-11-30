@@ -335,8 +335,8 @@ def create_selective_daily_monthly_means(stream:str):
         t1.add_trigger(long_rule)
 
         # Clean scratch (only if archive task exists)
-        t1 = run.add_task(f"clean_scratch")
-        t1.add_trigger("(archive_to_marsscratch == complete)")
+        #t1 = run.add_task(f"clean_scratch")
+        #t1.add_trigger("(archive_to_marsscratch == complete)")
 
     return run
 
