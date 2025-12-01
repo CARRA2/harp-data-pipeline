@@ -1,0 +1,35 @@
+#
+# TEST!
+# harp sqlite processing system configuration for ECMWF Atos
+#
+
+# directory with the scripts
+## MEANS_SCR="$HOME/scripts/carra/carra_means/bashscripts/backlog"
+
+# List of STREAMS to process (defined under EXP/STREAM)
+# Now doiung this in the main script
+#ECFPROJ_STREAMS="no-ar-ce,no-ar-cw"
+#export ECFPROJ_STREAMS
+
+export MEANS_SCR
+
+# Load modules
+#
+module unload eccodes
+module unload ecmwf-toolbox
+module load ecmwf-toolbox/2021.08.3.0
+module unload python
+module load python3/3.8.8-01
+module unload ecflow
+module load ecflow ecflow/5.7.0
+module unload troika
+module load troika/0.1.4
+
+module load eclib
+
+# ecFlow server
+# port_number is set based on the unique users numeric uid.
+export ECF_PORT=3141
+export ECF_HOST="ecflow-gen-${USER}-001"
+
+
