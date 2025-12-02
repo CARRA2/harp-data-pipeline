@@ -190,7 +190,7 @@ def create_an_means_family(stream:str):
             created_daily_tasks.append(ltype)
 
     if DO_MONTHLY_MEANS and created_daily_tasks:
-        t1 = run.add_task(f"monthly_means_an_insta")
+        t1 = run.add_task(f"monthly_means_an_insta_level")
         if len(created_daily_tasks) > 0:
             mm = []
             for ltype in created_daily_tasks:
@@ -203,11 +203,12 @@ def create_an_means_family(stream:str):
 
     if DO_MONTHLY_MEANS and created_daily_tasks:
         t1 = run.add_task(f"archive_to_marsscratch")
-        t1.add_trigger("(monthly_means_an_insta == complete)")
+        t1.add_trigger("(monthly_means_an_insta_level == complete)")
 
     return run
 
 fs = suite.add_family(CARRA_PERIOD)
+
 for ecfproj_stream in ecfproj_streams:
     print(f"Creating AN means family for {ecfproj_stream}")
     fs.add_family(create_an_means_family(ecfproj_stream))
