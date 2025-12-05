@@ -447,3 +447,33 @@ else
 fi
 
 exit $ECFPROJ_EXIT_CODE
+
+def create_an_means_family(stream:str):
+    this_stream = names_dict[stream]
+    run = ec.Family(f"{this_stream}")
+    run.add_variable("ECFPROJ_STREAM", stream)
+
+    created_daily_tasks = []
+    
+    if DO_DAILY_MEANS:
+        for ltype in LEVEL_TYPES:
+            t1 = run.add_task(f"daily_mean_an_insta_{ltype}")
+            created_daily_tasks.append(ltype)
+
+    if DO_MONTHLY_MEANS and created_daily_tasks:
+        for ltype in created_daily_tasks:
+            t1 = run.add_task(f"monthly_means_an_insta_{ltype.upper()}")
+            t1.add_trigger(f"(daily_mean_an_insta_{ltype} == complete)")
+
+    if DO_MONTHLY_MEANS and created_daily_tasks:
+        t1 = run.add_task(f"archive_to_marsscratch")
+        mm = []
+        for ltype in created_daily_tasks:
+            mm.append(f"(monthly_means_an_insta_{ltype.upper()} == complete)")
+        if len(mm) > 1:
+            long_rule = "(" + " and ".join(mm) + ")"
+        else:
+            long_rule = mm[0]
+        t1.add_trigger(long_rule)
+
+    return run
