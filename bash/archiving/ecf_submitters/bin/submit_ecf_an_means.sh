@@ -70,6 +70,14 @@ create_custom_env() {
         exit 1
     fi
     
+    # Unset all parameter environment variables first to ensure only selected ones are active
+    echo "unset CARRA_PAR_AN_SFC" >> "$temp_env"
+    echo "unset CARRA_PAR_AN_SFC_ARXIV" >> "$temp_env"
+    echo "unset CARRA_PAR_AN_ML" >> "$temp_env"
+    echo "unset CARRA_PAR_AN_PL" >> "$temp_env"
+    echo "unset CARRA_PAR_AN_HL" >> "$temp_env"
+    
+    # Now export only the specified custom parameters
     if [ -n "$CUSTOM_PARAMS_SFC" ]; then
         echo "export CARRA_PAR_AN_SFC=\"$CUSTOM_PARAMS_SFC\"" >> "$temp_env"
         echo "export CARRA_PAR_AN_SFC_ARXIV=\"$CUSTOM_PARAMS_SFC\"" >> "$temp_env"
@@ -89,6 +97,7 @@ create_custom_env() {
     
     echo "$temp_env"
 }
+
 
 create_an_means_suite_script() {
     local temp_suite=$(mktemp --suffix=.py)
