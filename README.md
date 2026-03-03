@@ -33,6 +33,18 @@ ln -sf ../../config/config_archive.sh env.sh
 ln -sf ../../config/load_eccodes.sh load_eccodes.sh
 ```
 
+## Installing conda enviroment
+Some ofthe scripts in the archivng part require
+a conda environment named `glat`. This is installed in the `fac2`
+user, but if needs installation in your local path use the `glat.yaml' file under
+`python/glat.yaml`
+
+```
+module load conda
+conda env create --file=./glat.yml
+
+```
+
 
 ## Summary of main scripts
 
